@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include "Player.h"
 #include "Enemy.h"
+#include "Board.h"
 
 class Game
 {
@@ -30,6 +31,7 @@ private:
     // Game Objects
     Player m_player;
     Enemy m_enemy;
+    Board m_board;
 };
 
 #pragma warning( pop ) 

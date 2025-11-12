@@ -104,6 +104,7 @@ void Game::render()
 {
     window.clear(sf::Color::Black);
 
+    m_board.render(window);
     m_player.render(window);
     m_enemy.render(window);
 
