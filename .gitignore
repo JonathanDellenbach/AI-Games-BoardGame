@@ -1,0 +1,29 @@
+# Visual Studio files
+.vs/
+Debug/
+Release/
+x64/
+x86/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+[Xx]64/
+[Xx]86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# VS Code
+.vscode/
+
+# OS generated files
+Thumbs.db
+.DS_Store
