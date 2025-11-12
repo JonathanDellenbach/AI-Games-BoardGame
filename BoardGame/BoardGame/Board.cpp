@@ -20,7 +20,7 @@ void Board::initializePieceSelectionGrid() //2x5 grid for pieces
             GridPos pos{ col, row };
             sf::RectangleShape cell(sf::Vector2f(CELL_SIZE - 2, CELL_SIZE - 2));
 
-            cell.setPosition({ GRID_OFFSET_X + col * CELL_SIZE, GRID_OFFSET_Y + row * CELL_SIZE});
+            cell.setPosition({ GRID_OFFSET_X + col * CELL_SIZE, GRID_OFFSET_Y + row * CELL_SIZE });
 
             cell.setFillColor(sf::Color(80, 80, 80));
             cell.setOutlineColor(sf::Color::White);
