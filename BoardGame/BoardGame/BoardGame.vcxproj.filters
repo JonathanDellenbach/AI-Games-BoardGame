@@ -39,6 +39,24 @@
     <Image Include="ASSETS\IMAGES\PlayerShip.png">
       <Filter>Resource Files\IMAGES</Filter>
     </Image>
+    <Image Include="ASSETS\IMAGES\green-donkey.png">
+      <Filter>Resource Files\IMAGES</Filter>
+    </Image>
+    <Image Include="ASSETS\IMAGES\green-frog.png">
+      <Filter>Resource Files\IMAGES</Filter>
+    </Image>
+    <Image Include="ASSETS\IMAGES\green-snake.png">
+      <Filter>Resource Files\IMAGES</Filter>
+    </Image>
+    <Image Include="ASSETS\IMAGES\red-donkey.png">
+      <Filter>Resource Files\IMAGES</Filter>
+    </Image>
+    <Image Include="ASSETS\IMAGES\red-frog.png">
+      <Filter>Resource Files\IMAGES</Filter>
+    </Image>
+    <Image Include="ASSETS\IMAGES\red-snake.png">
+      <Filter>Resource Files\IMAGES</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Font Include="ASSETS\FONTS\Jersey20-Regular.ttf">
@@ -69,6 +87,9 @@
     <ClCompile Include="Board.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Piece.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Game.h">
@@ -84,6 +105,9 @@
       <Filter>Header Files\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Piece.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

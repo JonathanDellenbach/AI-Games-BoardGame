@@ -44,6 +44,9 @@ public:
     void initializePieceSelectionGrid();
     void initializeGameBoard();
 
+    sf::RectangleShape* getPieceSelectionCell(int col, int row);
+    sf::RectangleShape* getGameBoardCell(int col, int row);
+
 private:
 
     //grid setup

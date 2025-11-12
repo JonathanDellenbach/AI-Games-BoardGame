@@ -83,3 +83,25 @@ void Board::render(sf::RenderWindow& window)
         }
     }
 }
+
+sf::RectangleShape* Board::getPieceSelectionCell(int col, int row)
+{
+    GridPos pos{ col, row };
+    auto it = pieceSelectionGrid.find(pos);
+    if (it != pieceSelectionGrid.end())
+    {
+        return &(it->second);
+    }
+    return nullptr;
+}
+
+sf::RectangleShape* Board::getGameBoardCell(int col, int row)
+{
+    GridPos pos{ col, row };
+    auto it = gameBoard.find(pos);
+    if (it != gameBoard.end())
+    {
+        return &(it->second);
+    }
+    return nullptr;
+}

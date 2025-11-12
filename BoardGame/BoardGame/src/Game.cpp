@@ -2,10 +2,11 @@
 #include <iostream>
 
 Game::Game() :
-    window{ sf::VideoMode{ sf::Vector2u{1920U, 1080U}, 32U }, "SFML Game 3.0" },
+    window{ sf::VideoMode{ sf::Vector2u{1920U, 1080U}, 32U }, "Board Game" },
     m_gameValid(false)
 {
     m_gameValid = validateEntities();
+    initializePieces();
 }
 
 Game::~Game()
@@ -105,8 +106,69 @@ void Game::render()
     window.clear(sf::Color::Black);
 
     m_board.render(window);
-    m_player.render(window);
-    m_enemy.render(window);
+
+    //Player pieces
+    for (auto& piece : m_playerPieces)
+    {
+        piece.render(window);
+    }
+
+    //AI pieces
+    for (auto& piece : m_aiPieces)
+    {
+        piece.render(window);
+    }
+
+    //m_player.render(window);
+    //m_enemy.render(window);
 
     window.display();
+}
+
+void Game::initializePieces()
+{
+    m_playerPieces.reserve(5);
+    m_aiPieces.reserve(5);
+
+    // Player pieces
+    m_playerPieces.emplace_back(PieceType::FROG, PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-frog.png");
+    m_playerPieces.emplace_back(PieceType::SNAKE, PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-snake.png");
+    m_playerPieces.emplace_back(PieceType::DONKEY, PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-donkey.png");
+    m_playerPieces.emplace_back(PieceType::DONKEY, PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-donkey.png");
+    m_playerPieces.emplace_back(PieceType::DONKEY, PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-donkey.png");
+
+    // AI pieces
+    m_aiPieces.emplace_back(PieceType::FROG, PieceOwner::AI, "ASSETS\\IMAGES\\red-frog.png");
+    m_aiPieces.emplace_back(PieceType::SNAKE, PieceOwner::AI, "ASSETS\\IMAGES\\red-snake.png");
+    m_aiPieces.emplace_back(PieceType::DONKEY, PieceOwner::AI, "ASSETS\\IMAGES\\red-donkey.png");
+    m_aiPieces.emplace_back(PieceType::DONKEY, PieceOwner::AI, "ASSETS\\IMAGES\\red-donkey.png");
+    m_aiPieces.emplace_back(PieceType::DONKEY, PieceOwner::AI, "ASSETS\\IMAGES\\red-donkey.png");
+
+    //position player pieces in selection grid
+    for (int i = 0; i < 5; i++)
+    {
+        m_playerPieces[i].setGridPosition(0, i);
+        //get cell position and set piece position
+        sf::RectangleShape* cell = m_board.getPieceSelectionCell(0, i);
+        if (cell != nullptr)
+        {
+            sf::Vector2f cellPos = cell->getPosition();
+            m_playerPieces[i].setPosition(cellPos.x, cellPos.y);
+        }
+    }
+
+    //position AI pieces in selection grid
+    for (int i = 0; i < 5; i++)
+    {
+        m_aiPieces[i].setGridPosition(1, i);
+        //get cell position and set piece position
+        sf::RectangleShape* cell = m_board.getPieceSelectionCell(1, i);
+        if (cell != nullptr)
+        {
+            sf::Vector2f cellPos = cell->getPosition();
+            m_aiPieces[i].setPosition(cellPos.x, cellPos.y);
+        }
+    }
+
+    std::cout << "pieces loaded" << std::endl;
 }

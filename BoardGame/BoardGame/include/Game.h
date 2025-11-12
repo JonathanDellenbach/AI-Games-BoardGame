@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Enemy.h"
 #include "Board.h"
+#include "Piece.h"
 
 class Game
 {
@@ -22,6 +23,7 @@ private:
     void render();
 
     bool validateEntities(); // Check if all entities loaded successfully
+    void initializePieces(); //create game pieces
 
     sf::RenderWindow window;
     sf::Font font;
@@ -32,6 +34,9 @@ private:
     Player m_player;
     Enemy m_enemy;
     Board m_board;
+
+    std::vector<Piece> m_playerPieces;
+    std::vector<Piece> m_aiPieces;
 };
 
 #pragma warning( pop ) 

@@ -20,7 +20,13 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="ASSETS\IMAGES\EnemyShip.png" />
+    <Image Include="ASSETS\IMAGES\green-donkey.png" />
+    <Image Include="ASSETS\IMAGES\green-frog.png" />
+    <Image Include="ASSETS\IMAGES\green-snake.png" />
     <Image Include="ASSETS\IMAGES\PlayerShip.png" />
+    <Image Include="ASSETS\IMAGES\red-donkey.png" />
+    <Image Include="ASSETS\IMAGES\red-frog.png" />
+    <Image Include="ASSETS\IMAGES\red-snake.png" />
     <Image Include="ASSETS\IMAGES\SFML-LOGO.png">
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</DeploymentContent>
       <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</DeploymentContent>
@@ -34,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Board.cpp" />
+    <ClCompile Include="Piece.cpp" />
     <ClCompile Include="src\Enemy.cpp" />
     <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\Game.cpp" />
@@ -46,6 +53,7 @@
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Player.h" />
+    <ClInclude Include="Piece.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
