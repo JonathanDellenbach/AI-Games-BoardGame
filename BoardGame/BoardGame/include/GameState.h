@@ -65,6 +65,7 @@ private:
     PieceOwner m_currentPlayer;
     PieceOwner m_winner;
 
+    // NOTE ADD THESE:
     // Helper functions for win checking
 
     // Helper functions for evaluation of pieces
