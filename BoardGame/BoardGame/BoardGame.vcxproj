@@ -39,21 +39,19 @@
     <Media Include="ASSETS\AUDIO\beep.wav" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Board.cpp" />
-    <ClCompile Include="Piece.cpp" />
-    <ClCompile Include="src\Enemy.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
+    <ClCompile Include="src\Board.cpp" />
+    <ClCompile Include="src\Donkey.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\Piece.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Board.h" />
-    <ClInclude Include="include\Enemy.h" />
-    <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\Board.h" />
+    <ClInclude Include="include\Donkey.h" />
     <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\Player.h" />
-    <ClInclude Include="Piece.h" />
+    <ClInclude Include="include\GameState.h" />
+    <ClInclude Include="include\Piece.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>

@@ -3,10 +3,12 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
-#include "Player.h"
-#include "Enemy.h"
 #include "Board.h"
-#include "Piece.h"
+#include "GameState.h"
+#include "Donkey.h"
+
+#include <vector>
+
 
 class Game
 {
@@ -16,14 +18,23 @@ public:
     void run();
 
 private:
-    void processEvents();
-    void processKeys(const std::optional<sf::Event> t_event);
-    void checkKeyboardState();
-    void update(sf::Time t_deltaTime);
     void render();
 
-    bool validateEntities(); // Check if all entities loaded successfully
+    // Init game
     void initializePieces(); //create game pieces
+    bool validateGame();
+
+    // Game loop
+    void processEvents();
+    void update(sf::Time t_deltaTime);
+
+    // Input
+    void processKeys(const std::optional<sf::Event> t_event);
+    void checkKeyboardState();
+
+    // Ai
+
+    // Helper Functions
 
     sf::RenderWindow window;
     sf::Font font;
@@ -31,12 +42,16 @@ private:
     bool m_gameValid = false;
 
     // Game Objects
-    Player m_player;
-    Enemy m_enemy;
     Board m_board;
 
-    std::vector<Piece> m_playerPieces;
-    std::vector<Piece> m_aiPieces;
+    // Pieces
+    std::vector<std::unique_ptr<Piece>> m_allPieces;
+    std::vector<Piece*> m_playerPieces;
+    std::vector<Piece*> m_aiPieces;
+    Piece* m_selectedPiece;
+    int m_selectedPieceIndex;
+    bool m_pieceSelected;
+
 };
 
 #pragma warning( pop ) 
