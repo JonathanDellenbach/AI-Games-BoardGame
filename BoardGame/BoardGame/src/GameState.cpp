@@ -54,3 +54,13 @@ bool GameState::isValidMove(const Move& move) const {
     // Use piece's movement validation
     return move.piece->isValidMove(*this, move.fromCol, move.fromRow, move.toCol, move.toRow);
 }
+
+std::vector<Move> GameState::getLegalMoves(PieceOwner player) const
+{
+    return std::vector<Move>();
+}
+
+std::vector<std::pair<int, int>> GameState::getLegalPlacements() const
+{
+    return std::vector<std::pair<int, int>>();
+}
