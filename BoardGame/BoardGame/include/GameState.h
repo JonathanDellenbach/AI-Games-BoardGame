@@ -39,7 +39,8 @@ public:
     // Move validation and generation
     bool isValidPlacement(int col, int row) const;
     bool isValidMove(const Move& move) const;
-    // NOTE: MAKE A LEGAL MOVE PLACEMENT
+    std::vector<Move> getLegalMoves(PieceOwner player) const;
+    std::vector<std::pair<int, int>> getLegalPlacements() const;
 
     // Move execution
     void applyMove(const Move& move);
