@@ -235,7 +235,7 @@ void Game::selectPieceFromSelectionGrid(GridPos pos)
         {
             m_selectedPiece = piece;
 
-            sf::RectangleShape* cell = m_board.getPieceSelectionCell(pos.x, pos.y);
+            sf::RectangleShape* cell = m_board.getPieceSelectionCell(pos.x, pos.y); //using hash to get cell to highlight
             if (cell)
             {
                 cell->setFillColor(sf::Color::Yellow);
@@ -259,9 +259,10 @@ void Game::selectPieceFromGameBoard(GridPos pos)
             return;
         }
 
-        sf::Vector2f clickedCellPos = clickedCell->getPosition();
+        sf::Vector2f clickedCellPos = clickedCell->getPosition(); //get top left of cell
         sf::Vector2f piecePos = piece->getPosition();
 
+        //get center of clicked cell adding 50 on the x and y
         float distanceX = abs(piecePos.x - (clickedCellPos.x + 50.0f));
         float distanceY = abs(piecePos.y - (clickedCellPos.y + 50.0f));
 
@@ -278,31 +279,30 @@ void Game::selectPieceFromGameBoard(GridPos pos)
 
 void Game::placePiece(GridPos pos)
 {
-    if (!m_selectedPiece)
+    if (!m_selectedPiece) //nothing selected cant place anything
     {
         return;
     }
 
-    sf::RectangleShape* cell = m_board.getGameBoardCell(pos.x, pos.y);
+    sf::RectangleShape* cell = m_board.getGameBoardCell(pos.x, pos.y); //get clicked cell
     if (cell)
     {
         sf::Vector2f cellPos = cell->getPosition();
-        m_selectedPiece->setPosition(cellPos.x, cellPos.y);
-        m_selectedPiece->setGridPosition(pos.x, pos.y);
+        m_selectedPiece->setPosition(cellPos.x, cellPos.y); //place piece in cells position
+        m_selectedPiece->setGridPosition(pos.x, pos.y); //sets grid position like (3,4)
 
         std::cout << "Placed piece at (" << pos.x << ", " << pos.y << ")" << std::endl;
 
         clearAllHighlights();
 
-        m_selectedPiece = nullptr;
+        m_selectedPiece = nullptr; //nothign is selected anymore
         switchTurn();
     }
 }
 
 void Game::clearAllHighlights()
 {
-    // Clear all selection grid highlights
-    for (int col = 0; col < 2; col++)
+    for (int col = 0; col < 2; col++) //clear selection grid highlights
     {
         for (int row = 0; row < 5; row++)
         {
@@ -314,8 +314,7 @@ void Game::clearAllHighlights()
         }
     }
 
-    // Clear all game board highlights
-    for (int col = 0; col < 5; col++)
+    for (int col = 0; col < 5; col++) //clear game board highlights
     {
         for (int row = 0; row < 5; row++)
         {

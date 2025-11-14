@@ -7,7 +7,7 @@
 
 //Mental reminder Board.h/.cpp is for drawing board game cells and managing positions/grid logic
 // 
-//grid position
+//grid position coord like {2,1}
 struct GridPos
 {
     int x;
@@ -48,10 +48,10 @@ public:
     sf::RectangleShape* getGameBoardCell(int col, int row);
 
     //mouse
-    GridPos screenToSelectionGrid(int mouseX, int mouseY) const; //convert pixel coord to selection grid pos
-    GridPos screenToGameBoard(int mouseX, int mouseY) const; // convert pixel coord to board grid pos
-    bool isInSelectionGrid(int mouseX, int mouseY) const; //ensures the click its inside of the selection grid
-    bool isInGameBoard(int mouseX, int mouseY) const; //ensures the click its inside of the boaord grid
+    GridPos screenToSelectionGrid(int mouseX, int mouseY); //convert pixel coord to selection grid pos
+    GridPos screenToGameBoard(int mouseX, int mouseY); // convert pixel coord to board grid pos
+    bool isInSelectionGrid(int mouseX, int mouseY); //ensures the click its inside of the selection grid
+    bool isInGameBoard(int mouseX, int mouseY); //ensures the click its inside of the boaord grid
 
 private:
 

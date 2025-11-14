@@ -63,7 +63,7 @@ void Board::render(sf::RenderWindow& window)
         for (int row = 0; row < 5; row++)
         {
             GridPos pos{ col, row };
-            if (pieceSelectionGrid.find(pos) != pieceSelectionGrid.end())
+            if (pieceSelectionGrid.find(pos) != pieceSelectionGrid.end()) //get cell in hashmap
             {
                 window.draw(pieceSelectionGrid[pos]);
             }
@@ -106,27 +106,27 @@ sf::RectangleShape* Board::getGameBoardCell(int col, int row)
     return nullptr;
 }
 
-GridPos Board::screenToSelectionGrid(int mouseX, int mouseY) const //convert pixel coord to selection grid pos
+GridPos Board::screenToSelectionGrid(int mouseX, int mouseY) //convert pixel coord to selection grid pos
 {
     int col = static_cast<int>((mouseX - GRID_OFFSET_X) / CELL_SIZE);
     int row = static_cast<int>((mouseY - GRID_OFFSET_Y) / CELL_SIZE);
     return GridPos{ col, row };
 }
 
-GridPos Board::screenToGameBoard(int mouseX, int mouseY) const // convert pixel coord to board grid pos
+GridPos Board::screenToGameBoard(int mouseX, int mouseY) // convert pixel coord to board grid pos
 {
     int col = static_cast<int>((mouseX - BOARD_OFFSET_X) / CELL_SIZE);
     int row = static_cast<int>((mouseY - GRID_OFFSET_Y) / CELL_SIZE);
     return GridPos{ col, row };
 }
 
-bool Board::isInSelectionGrid(int mouseX, int mouseY) const // ensures the click its inside of the selection grid
+bool Board::isInSelectionGrid(int mouseX, int mouseY) // ensures the click its inside of the selection grid
 {
     GridPos pos = screenToSelectionGrid(mouseX, mouseY);
     return (pos.x >= 0 && pos.x < 2 && pos.y >= 0 && pos.y < 5);
 }
 
-bool Board::isInGameBoard(int mouseX, int mouseY) const // ensures the click its inside of the boaord grid
+bool Board::isInGameBoard(int mouseX, int mouseY) // ensures the click its inside of the boaord grid
 {
     GridPos pos = screenToGameBoard(mouseX, mouseY);
     return (pos.x >= 0 && pos.x < 5 && pos.y >= 0 && pos.y < 5);
