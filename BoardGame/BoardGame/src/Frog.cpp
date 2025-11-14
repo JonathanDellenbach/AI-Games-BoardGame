@@ -47,9 +47,9 @@ bool Frog::canJumpTo(const GameState& state, int fromCol, int fromRow, int toCol
             return false;
         }
 
-        if (!state.isPositionEmpty(currentCol, currentRow)) {
+        /*if (!state.isPositionEmpty(currentCol, currentRow)) {
             hasJumpedOverPiece = true;
-        }
+        }*/
 
         // Move to next position in the path
         currentCol += dirCol;
