@@ -2,7 +2,15 @@
 #include "GameState.h"
 #include <cmath>
 
-bool Frog::isValidMove(const GameState& state, int fromCol, 
+Frog::Frog(PieceOwner owner, const std::string& texturePath)
+    : Piece(PieceType::FROG, owner, texturePath) {
+}
+
+Frog::~Frog()
+{
+}
+
+bool Frog::isValidMove(const GameState& state, int fromCol,
                         int fromRow, int toCol, int toRow) const
 {
     int deltaCol = toCol - fromCol;

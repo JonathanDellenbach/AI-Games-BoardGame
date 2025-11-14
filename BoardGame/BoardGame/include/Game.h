@@ -6,6 +6,8 @@
 #include "Board.h"
 #include "GameState.h"
 #include "Donkey.h"
+#include "Snake.h"
+#include "Frog.h"
 
 #include <vector>
 

@@ -96,7 +96,7 @@ void Game::update(sf::Time t_deltaTime)
     // AI turn
     if (m_currentTurn == PieceOwner::AI)
     {
-        sf::sleep(sf::seconds(0.3f));
+        //sf::sleep(sf::seconds(0.3f));
         std::cout << "AI skips turn" << std::endl;
         switchTurn();
     }
@@ -118,19 +118,19 @@ void Game::render()
 
 void Game::initializePieces()
 {
-    m_playerPieces.reserve(3);
-    m_aiPieces.reserve(3);
+    m_playerPieces.reserve(5);
+    m_aiPieces.reserve(5);
 
     // Player pieces
-    //m_allPieces.push_back(std::make_unique<Frog>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-frog.png"));
-   // m_allPieces.push_back(std::make_unique<Snake>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-snake.png"));
+    m_allPieces.push_back(std::make_unique<Frog>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-frog.png"));
+    m_allPieces.push_back(std::make_unique<Snake>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-snake.png"));
     m_allPieces.push_back(std::make_unique<Donkey>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-donkey.png"));
     m_allPieces.push_back(std::make_unique<Donkey>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-donkey.png"));
     m_allPieces.push_back(std::make_unique<Donkey>(PieceOwner::PLAYER, "ASSETS\\IMAGES\\green-donkey.png"));
 
     // AI pieces
-    //m_allPieces.push_back(std::make_unique<Frog>(PieceOwner::AI, "ASSETS\\IMAGES\\red-frog.png"));
-    //m_allPieces.push_back(std::make_unique<Snake>(PieceOwner::AI, "ASSETS\\IMAGES\\red-snake.png"));
+    m_allPieces.push_back(std::make_unique<Frog>(PieceOwner::AI, "ASSETS\\IMAGES\\red-frog.png"));
+    m_allPieces.push_back(std::make_unique<Snake>(PieceOwner::AI, "ASSETS\\IMAGES\\red-snake.png"));
     m_allPieces.push_back(std::make_unique<Donkey>(PieceOwner::AI, "ASSETS\\IMAGES\\red-donkey.png"));
     m_allPieces.push_back(std::make_unique<Donkey>(PieceOwner::AI, "ASSETS\\IMAGES\\red-donkey.png"));
     m_allPieces.push_back(std::make_unique<Donkey>(PieceOwner::AI, "ASSETS\\IMAGES\\red-donkey.png"));
@@ -138,15 +138,15 @@ void Game::initializePieces()
     // NOTE : REFACOTR BELOW TO BE MORE TYPE SAFE ON VECTOR SIZES IN THE FUTURE
 
     // Give the player and ai their pieces from the total pool
-    for (size_t i = 0; i < 3; i++) {
+    for (size_t i = 0; i < 5; i++) {
         m_playerPieces.push_back(m_allPieces[i].get());
     }
-    for (size_t i = 3; i < 6; i++) {
+    for (size_t i = 5; i < 10; i++) {
         m_aiPieces.push_back(m_allPieces[i].get());
     }
 
     //position player pieces in selection grid
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 5; i++)
     {
         //get cell position and set piece position
         m_playerPieces[i]->setGridPosition(0, i); //which grid cell piece is in
@@ -159,7 +159,7 @@ void Game::initializePieces()
     }
 
     //position AI pieces in selection grid
-    for (int i = 0; i < 3; i++)
+    for (int i = 0; i < 5; i++)
     {
         //get cell position and set piece position
         m_aiPieces[i]->setGridPosition(1, i);
@@ -175,7 +175,7 @@ void Game::initializePieces()
 }
 
 bool Game::validateGame() {
-    if (m_playerPieces.size() != 3 || m_aiPieces.size() != 3) {
+    if (m_playerPieces.size() != 5 || m_aiPieces.size() != 5) {
         std::cout << "Invalid piece count" << std::endl;
         return false;
     }
