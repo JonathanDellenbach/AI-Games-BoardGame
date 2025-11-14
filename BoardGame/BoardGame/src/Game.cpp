@@ -10,7 +10,7 @@ Game::Game() :
 {
     initializePieces();
     m_gameValid = validateGame();
-
+    std::cout << "Player Turn" << std::endl;
     // Note: Load a font when we can to track game state
 }
 
@@ -57,6 +57,14 @@ void Game::processEvents()
         {
             processKeys(newEvent);
         }
+        if (newEvent->is<sf::Event::MouseButtonPressed>())
+        {
+            auto* mouseEvent = newEvent->getIf<sf::Event::MouseButtonPressed>();
+            if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left)
+            {
+                handleMouseClick(mouseEvent->position.x, mouseEvent->position.y);
+            }
+        }
     }
 }
 
@@ -83,6 +91,14 @@ void Game::update(sf::Time t_deltaTime)
     if (exitGame)
     {
         window.close();
+    }
+
+    // AI turn
+    if (m_currentTurn == PieceOwner::AI)
+    {
+        sf::sleep(sf::seconds(0.3f));
+        std::cout << "AI skips turn" << std::endl;
+        switchTurn();
     }
 }
 
@@ -133,7 +149,8 @@ void Game::initializePieces()
     for (int i = 0; i < 3; i++)
     {
         //get cell position and set piece position
-        sf::RectangleShape* cell = m_board.getPieceSelectionCell(0, i);
+        m_playerPieces[i]->setGridPosition(0, i); //which grid cell piece is in
+        sf::RectangleShape* cell = m_board.getPieceSelectionCell(0, i); //gt visual cell
         if (cell != nullptr)
         {
             sf::Vector2f cellPos = cell->getPosition();
@@ -145,6 +162,7 @@ void Game::initializePieces()
     for (int i = 0; i < 3; i++)
     {
         //get cell position and set piece position
+        m_aiPieces[i]->setGridPosition(1, i);
         sf::RectangleShape* cell = m_board.getPieceSelectionCell(1, i);
         if (cell != nullptr)
         {
@@ -164,4 +182,162 @@ bool Game::validateGame() {
 
     std::cout << "Game initialized successfully" << std::endl;
     return true;
+}
+
+void Game::handleMouseClick(int mouseX, int mouseY)
+{
+    if (m_currentTurn != PieceOwner::PLAYER) //only allow clicks on player turn
+    {
+        return;
+    }
+
+    if (!m_selectedPiece) //no piece selected
+    {
+        if (m_board.isInSelectionGrid(mouseX, mouseY))
+        {
+            GridPos pos = m_board.screenToSelectionGrid(mouseX, mouseY);
+            selectPieceFromSelectionGrid(pos);
+        }
+        else if (m_board.isInGameBoard(mouseX, mouseY))
+        {
+            GridPos pos = m_board.screenToGameBoard(mouseX, mouseY);
+            selectPieceFromGameBoard(pos);
+        }
+    }
+    
+    else //piece selected
+    {
+        if (m_board.isInGameBoard(mouseX, mouseY)) // clicked in board
+        {
+            GridPos pos = m_board.screenToGameBoard(mouseX, mouseY);
+            placePiece(pos);
+        }
+        else //clicked off board
+        {
+            clearAllHighlights();
+            m_selectedPiece = nullptr;
+        }
+    }
+}
+
+void Game::selectPieceFromSelectionGrid(GridPos pos)
+{
+    clearAllHighlights();
+
+    if (pos.x != 0) //only select pieces from player column
+    {
+        return;
+    }
+
+    for (Piece* piece : m_playerPieces)
+    {
+        if (piece->getGridCol() == pos.x && piece->getGridRow() == pos.y && piece->getGridCol() <= 1) //still in selection grid
+        {
+            m_selectedPiece = piece;
+
+            sf::RectangleShape* cell = m_board.getPieceSelectionCell(pos.x, pos.y);
+            if (cell)
+            {
+                cell->setFillColor(sf::Color::Yellow);
+            }
+
+            std::cout << "clicked selection grid piece at (" << pos.x << ", " << pos.y << ")" << std::endl;
+            return;
+        }
+    }
+}
+
+void Game::selectPieceFromGameBoard(GridPos pos)
+{
+    clearAllHighlights();
+
+    for (Piece* piece : m_playerPieces)
+    {
+        sf::RectangleShape* clickedCell = m_board.getGameBoardCell(pos.x, pos.y); //get clicked cell
+        if (!clickedCell)
+        {
+            return;
+        }
+
+        sf::Vector2f clickedCellPos = clickedCell->getPosition();
+        sf::Vector2f piecePos = piece->getPosition();
+
+        float distanceX = abs(piecePos.x - (clickedCellPos.x + 50.0f));
+        float distanceY = abs(piecePos.y - (clickedCellPos.y + 50.0f));
+
+        if (distanceX < 10.0f && distanceY < 10.0f)
+        {
+            m_selectedPiece = piece;
+            clickedCell->setFillColor(sf::Color::Yellow);
+
+            std::cout << "clciked game board grid piece at (" << pos.x << ", " << pos.y << ")" << std::endl;
+            return;
+        }
+    }
+}
+
+void Game::placePiece(GridPos pos)
+{
+    if (!m_selectedPiece)
+    {
+        return;
+    }
+
+    sf::RectangleShape* cell = m_board.getGameBoardCell(pos.x, pos.y);
+    if (cell)
+    {
+        sf::Vector2f cellPos = cell->getPosition();
+        m_selectedPiece->setPosition(cellPos.x, cellPos.y);
+        m_selectedPiece->setGridPosition(pos.x, pos.y);
+
+        std::cout << "Placed piece at (" << pos.x << ", " << pos.y << ")" << std::endl;
+
+        clearAllHighlights();
+
+        m_selectedPiece = nullptr;
+        switchTurn();
+    }
+}
+
+void Game::clearAllHighlights()
+{
+    // Clear all selection grid highlights
+    for (int col = 0; col < 2; col++)
+    {
+        for (int row = 0; row < 5; row++)
+        {
+            sf::RectangleShape* cell = m_board.getPieceSelectionCell(col, row);
+            if (cell)
+            {
+                cell->setFillColor(sf::Color(80, 80, 80));
+            }
+        }
+    }
+
+    // Clear all game board highlights
+    for (int col = 0; col < 5; col++)
+    {
+        for (int row = 0; row < 5; row++)
+        {
+            sf::RectangleShape* cell = m_board.getGameBoardCell(col, row);
+            if (cell)
+            {
+                cell->setFillColor(sf::Color(60, 60, 60));
+            }
+        }
+    }
+}
+
+void Game::switchTurn()
+{
+    if (m_currentTurn == PieceOwner::PLAYER)
+    {
+        m_currentTurn = PieceOwner::AI;
+        std::cout << "\nAI's Turn" << std::endl;
+    }
+    else
+    {
+        m_currentTurn = PieceOwner::PLAYER;
+        std::cout << "\nPlayer Turn" << std::endl;
+    }
 }

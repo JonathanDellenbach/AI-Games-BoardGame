@@ -32,6 +32,15 @@ private:
     void processKeys(const std::optional<sf::Event> t_event);
     void checkKeyboardState();
 
+    //mouse input
+    void handleMouseClick(int mouseX, int mouseY);
+    void selectPieceFromSelectionGrid(GridPos pos);
+    void selectPieceFromGameBoard(GridPos pos);
+    void placePiece(GridPos pos);
+    void clearAllHighlights();
+
+    void switchTurn();
+
     // Ai
 
     // Helper Functions
@@ -48,7 +57,8 @@ private:
     std::vector<std::unique_ptr<Piece>> m_allPieces;
     std::vector<Piece*> m_playerPieces;
     std::vector<Piece*> m_aiPieces;
-    Piece* m_selectedPiece;
+    Piece* m_selectedPiece = nullptr;
+    PieceOwner m_currentTurn = PieceOwner::PLAYER;
     int m_selectedPieceIndex;
     bool m_pieceSelected;
 

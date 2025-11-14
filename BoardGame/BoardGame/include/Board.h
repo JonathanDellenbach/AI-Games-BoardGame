@@ -47,6 +47,12 @@ public:
     sf::RectangleShape* getPieceSelectionCell(int col, int row);
     sf::RectangleShape* getGameBoardCell(int col, int row);
 
+    //mouse
+    GridPos screenToSelectionGrid(int mouseX, int mouseY) const; //convert pixel coord to selection grid pos
+    GridPos screenToGameBoard(int mouseX, int mouseY) const; // convert pixel coord to board grid pos
+    bool isInSelectionGrid(int mouseX, int mouseY) const; //ensures the click its inside of the selection grid
+    bool isInGameBoard(int mouseX, int mouseY) const; //ensures the click its inside of the boaord grid
+
 private:
 
     //grid setup
