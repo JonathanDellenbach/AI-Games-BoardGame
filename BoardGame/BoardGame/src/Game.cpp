@@ -105,7 +105,7 @@ void Game::update(sf::Time t_deltaTime)
 
     // AI turn
     if (m_currentTurn == PieceOwner::AI && m_gameState.getCurrentPhase() != GamePhase::GAME_OVER) {
-        sf::sleep(sf::seconds(0.5f));
+        sf::sleep(sf::seconds(0.25f));
 
         if (m_gameState.getCurrentPhase() == GamePhase::PLACEMENT) {
             executeAIPlacement();
