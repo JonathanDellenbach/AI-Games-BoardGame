@@ -44,7 +44,7 @@ public:
     std::vector<std::pair<int, int>> getLegalPlacements() const;
 
     // Move execution
-    void applyMove(const Move& move);
+    void applyMove(const Move& move, bool updatePiecePosition = true);
     void applyPlacement(int col, int row, Piece* piece);
 
     // Win condition checking

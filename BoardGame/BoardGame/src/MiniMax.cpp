@@ -86,7 +86,7 @@ int MiniMax::alphaBeta(const GameState& state, int depth, int alpha, int beta,
 
         for (const Move& move : moves) {
             GameState testState = state;
-            testState.applyMove(move);
+            testState.applyMove(move, false);
 
             int eval = alphaBeta(testState, depth - 1, alpha, beta, false, aiPlayer);
             maxEval = std::max(maxEval, eval);
@@ -105,7 +105,7 @@ int MiniMax::alphaBeta(const GameState& state, int depth, int alpha, int beta,
 
         for (const Move& move : moves) {
             GameState testState = state;
-            testState.applyMove(move);
+            testState.applyMove(move, false);
 
             int eval = alphaBeta(testState, depth - 1, alpha, beta, true, aiPlayer);
             minEval = std::min(minEval, eval);

@@ -308,6 +308,20 @@ void Game::selectPieceFromSelectionGrid(GridPos pos)
     // Find unplaced player piece at this row
     // Check by visual row position, not grid position (since unplaced pieces have grid col = -1)
     for (Piece* piece : m_playerPieces) {
+        // Check if this piece is still in the selection area (not yet placed on board)
+        // A piece is unplaced if it's not found on the game board
+        bool isPlaced = false;
+        for (int col = 0; col < 5 && !isPlaced; col++) //Search the entire board to see if this piece exists
+        {
+            for (int row = 0; row < 5 && !isPlaced; row++) 
+            {
+                if (m_gameState.getPieceAt(col, row) == piece) 
+                {
+                    isPlaced = true; //found it on the board - its been placed otherwise its on the selection grid
+                }
+            }
+        }
+        
         // Piece is in selection grid if its grid column is negative
         if (piece->getGridCol() < 0 && piece->getGridRow() == pos.y) {
             m_selectedPiece = piece;

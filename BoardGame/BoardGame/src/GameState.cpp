@@ -175,12 +175,15 @@ std::vector<std::pair<int, int>> GameState::getLegalPlacements() const {
     return placements;
 }
 
-void GameState::applyMove(const Move& move) {
+void GameState::applyMove(const Move& move, bool updatePiecePosition) {
     if (!move.piece) return;
+    m_board[move.fromCol][move.fromRow] = nullptr; //remove old pos
+    m_board[move.toCol][move.toRow] = move.piece; //place at new position
 
-    m_board[move.fromCol][move.fromRow] = nullptr;
-    m_board[move.toCol][move.toRow] = move.piece;
-    move.piece->setGridPosition(move.toCol, move.toRow);
+    if (updatePiecePosition) //we added the flag to control whether we update the piece or not
+    {
+        move.piece->setGridPosition(move.toCol, move.toRow); //when making real moves its true when simulating moves its false in minimax
+    }
 }
 
 void GameState::applyPlacement(int col, int row, Piece* piece) {
