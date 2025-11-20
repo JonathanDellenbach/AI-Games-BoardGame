@@ -5,6 +5,7 @@
 #include <SFML/Audio.hpp>
 #include "Board.h"
 #include "GameState.h"
+#include "MiniMax.h"
 #include "Donkey.h"
 #include "Snake.h"
 #include "Frog.h"
@@ -42,6 +43,9 @@ private:
     void placePieceInPlacementPhase(GridPos pos);
     void movePiece(GridPos pos);
 
+    // AI execution
+    void executeAIPlacement();
+    void executeAIMove();
 
     // Ui Helpters
     void highlightValidPlacements();
@@ -53,7 +57,7 @@ private:
     // Game Comps
     Board m_board;
     GameState m_gameState;
-    // Add Minimax
+    MiniMax m_ai;
 
     // General SFML and locals
     sf::RenderWindow window;

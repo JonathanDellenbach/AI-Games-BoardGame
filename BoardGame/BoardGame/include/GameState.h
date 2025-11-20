@@ -39,6 +39,7 @@ public:
     // Move validation and generation
     bool isValidPlacement(int col, int row) const;
     bool isValidMove(const Move& move) const;
+
     std::vector<Move> getLegalMoves(PieceOwner player) const;
     std::vector<std::pair<int, int>> getLegalPlacements() const;
 
@@ -57,8 +58,6 @@ public:
     GamePhase getCurrentPhase() const { return m_currentPhase; }
     void setPhase(GamePhase phase) { m_currentPhase = phase; }
 
-    // Turn management
-
 private:
     // Add non owning pointer to board and the locals
     Piece* m_board[5][5];
@@ -66,7 +65,9 @@ private:
     PieceOwner m_currentPlayer;
     PieceOwner m_winner;
 
-    // Helper functions for evaluation
+    // To check a line directly
+    bool checkLine(int startCol, int startRow, int dCol, int dRow, PieceOwner player) const;
+    // Helper functions for evaluatio
     int evaluateLines(PieceOwner player) const;
     int evaluateLine(int startCol, int startRow, int deltaCol, int deltaRow, PieceOwner player) const;
     int evaluateCenterControl(PieceOwner player) const;

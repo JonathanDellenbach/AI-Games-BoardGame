@@ -1,5 +1,24 @@
 #include "GameState.h"
 
+
+// Pre-compile line check data for win detection and evaluation
+// Format: {startCol, startRow, deltaCol, deltaRow}
+static constexpr int WIN_LINES[24][4] = {
+    // Horizontal lines
+    {0,0,1,0}, {1,0,1,0}, {0,1,1,0}, {1,1,1,0}, {0,2,1,0},
+    {1,2,1,0}, {0,3,1,0}, {1,3,1,0}, {0,4,1,0}, {1,4,1,0},
+    // Vertical lines
+    {0,0,0,1}, {0,1,0,1}, {1,0,0,1}, {1,1,0,1}, {2,0,0,1},
+    {2,1,0,1}, {3,0,0,1}, {3,1,0,1}, {4,0,0,1}, {4,1,0,1},
+    // Diagonal TL-BR (4 total)
+    {0,0,1,1}, {1,0,1,1}, {0,1,1,1}, {1,1,1,1}
+};
+
+// Anti-diagonal lines (TR-BL)
+static constexpr int ANTI_DIAG_LINES[4][4] = {
+    {3,0,-1,1}, {4,0,-1,1}, {3,1,-1,1}, {4,1,-1,1}
+};
+
 GameState::GameState()
     : m_currentPhase(GamePhase::PLACEMENT)
     , m_currentPlayer(PieceOwner::PLAYER)
@@ -65,59 +84,108 @@ bool GameState::isValidMove(const Move& move) const {
 }
 
 std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
-    std::vector<Move> legalMoves;
+    std::vector<Move> moves;
+    moves.reserve(50);  // Pre-allocate for efficiency
 
-    // Find all pieces belonging to the player
+    // First pass: find all pieces belonging to player
     for (int fromCol = 0; fromCol < 5; fromCol++) {
         for (int fromRow = 0; fromRow < 5; fromRow++) {
-            Piece* piece = getPieceAt(fromCol, fromRow);
-            if (piece && piece->getOwner() == player) {
-                // Try all possible destinations
-                for (int toCol = 0; toCol < 5; toCol++) {
-                    for (int toRow = 0; toRow < 5; toRow++) {
-                        Move move(fromCol, fromRow, toCol, toRow, piece);
-                        if (isValidMove(move)) {
-                            legalMoves.push_back(move);
-                        }
+            Piece* piece = m_board[fromCol][fromRow];
+            if (!piece || piece->getOwner() != player) continue;
+
+            // Generate moves based on piece type for efficiency
+            PieceType type = piece->getType();
+
+            if (type == PieceType::DONKEY) {
+                // Donkey: only 4 cardinal directions
+                static constexpr int cardinalDirs[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
+                for (auto& d : cardinalDirs) {
+                    int tc = fromCol + d[0], tr = fromRow + d[1];
+                    if (tc >= 0 && tc < 5 && tr >= 0 && tr < 5 && !m_board[tc][tr]) {
+                        moves.emplace_back(fromCol, fromRow, tc, tr, piece);
                     }
+                }
+            }
+            else if (type == PieceType::SNAKE) {
+                // Snake: 8 directions, 1 step
+                static constexpr int allDirs[8][2] = { {-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1} };
+                for (auto& d : allDirs) {
+                    int tc = fromCol + d[0], tr = fromRow + d[1];
+                    if (tc >= 0 && tc < 5 && tr >= 0 && tr < 5 && !m_board[tc][tr]) {
+                        moves.emplace_back(fromCol, fromRow, tc, tr, piece);
+                    }
+                }
+            }
+            else if (type == PieceType::FROG) {
+                // Frog: 8 directions for single step, plus jump moves
+                static constexpr int allDirs[8][2] = { {-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1} };
+
+                // Single step moves
+                for (auto& d : allDirs) {
+                    int tc = fromCol + d[0], tr = fromRow + d[1];
+                    if (tc >= 0 && tc < 5 && tr >= 0 && tr < 5 && !m_board[tc][tr]) {
+                        moves.emplace_back(fromCol, fromRow, tc, tr, piece);
+                    }
+                }
+
+                // Jump moves: check each direction for adjacent piece then find landing spot
+                // Frog can only land on the FIRST empty square after jumping over pieces
+                for (auto& d : allDirs) {
+                    int adjCol = fromCol + d[0], adjRow = fromRow + d[1];
+
+                    // Must have adjacent piece to jump over
+                    if (adjCol < 0 || adjCol >= 5 || adjRow < 0 || adjRow >= 5) continue;
+                    if (!m_board[adjCol][adjRow]) continue;  // No piece to jump
+
+                    // Skip over consecutive pieces, then land on first empty
+                    int landCol = adjCol + d[0], landRow = adjRow + d[1];
+
+                    // Skip over any consecutive pieces
+                    while (landCol >= 0 && landCol < 5 && landRow >= 0 && landRow < 5
+                        && m_board[landCol][landRow]) {
+                        landCol += d[0];
+                        landRow += d[1];
+                    }
+
+                    // Land on the first empty square (if in bounds)
+                    if (landCol >= 0 && landCol < 5 && landRow >= 0 && landRow < 5
+                        && !m_board[landCol][landRow]) {
+                        moves.emplace_back(fromCol, fromRow, landCol, landRow, piece);
+                    }
+                    // Frog cannot skip empty squares, so only ONE landing spot per direction
                 }
             }
         }
     }
 
-    return legalMoves;
+    return moves;
 }
 
 std::vector<std::pair<int, int>> GameState::getLegalPlacements() const {
     std::vector<std::pair<int, int>> placements;
+    placements.reserve(25);
 
     for (int col = 0; col < 5; col++) {
         for (int row = 0; row < 5; row++) {
-            if (isValidPlacement(col, row)) {
-                placements.push_back({ col, row });
+            if (!m_board[col][row]) {
+                placements.emplace_back(col, row);
             }
         }
     }
-
     return placements;
 }
 
 void GameState::applyMove(const Move& move) {
     if (!move.piece) return;
 
-    // Remove piece from old position
-    removePieceAt(move.fromCol, move.fromRow);
-
-    // Place piece at new position
-    setPieceAt(move.toCol, move.toRow, move.piece);
-
-    // Update piece's grid position
+    m_board[move.fromCol][move.fromRow] = nullptr;
+    m_board[move.toCol][move.toRow] = move.piece;
     move.piece->setGridPosition(move.toCol, move.toRow);
 }
 
 void GameState::applyPlacement(int col, int row, Piece* piece) {
-    if (piece && isValidPlacement(col, row)) {
-        setPieceAt(col, row, piece);
+    if (piece && col >= 0 && col < 5 && row >= 0 && row < 5 && !m_board[col][row]) {
+        m_board[col][row] = piece;
         piece->setGridPosition(col, row);
     }
 }
@@ -200,25 +268,28 @@ PieceOwner GameState::getWinner() const {
     return PieceOwner::NONE;
 }
 
+bool GameState::checkLine(int startCol, int startRow, int dCol, int dRow, PieceOwner player) const
+{
+    for (int i = 0; i < 4; i++) {
+        Piece* p = m_board[startCol + i * dCol][startRow + i * dRow];
+        if (!p || p->getOwner() != player) return false;
+    }
+    return true;
+}
+
+
 int GameState::evaluate(PieceOwner player) const {
-    // If there's a winner, return extreme values
     PieceOwner winner = getWinner();
     if (winner == player) return 10000;
-    if (winner != PieceOwner::NONE && winner != player) return -10000;
+    if (winner != PieceOwner::NONE) return -10000;
 
     int score = 0;
     PieceOwner opponent = (player == PieceOwner::PLAYER) ? PieceOwner::AI : PieceOwner::PLAYER;
 
-    // Evaluate potential lines of 4 for both players
     score += evaluateLines(player) * 10;
     score -= evaluateLines(opponent) * 10;
-
-    // Center control bonus
     score += evaluateCenterControl(player) * 5;
     score -= evaluateCenterControl(opponent) * 5;
-
-    // Mobility (number of legal moves)
-    // Note: This could be expensive, so we might weight it less or optimize
 
     return score;
 }
@@ -226,61 +297,34 @@ int GameState::evaluate(PieceOwner player) const {
 int GameState::evaluateLines(PieceOwner player) const {
     int score = 0;
 
-    // Check all possible lines of 4 and count how many pieces player has in each
-    // Horizontal
-    for (int row = 0; row < 5; row++) {
-        for (int col = 0; col <= 1; col++) {
-            score += evaluateLine(col, row, 1, 0, player);
-        }
+    // Use pre-computed line data
+    for (const auto& line : WIN_LINES) {
+        score += evaluateLine(line[0], line[1], line[2], line[3], player);
     }
-
-    // Vertical
-    for (int col = 0; col < 5; col++) {
-        for (int row = 0; row <= 1; row++) {
-            score += evaluateLine(col, row, 0, 1, player);
-        }
-    }
-
-    // Diagonal (top-left to bottom-right)
-    for (int col = 0; col <= 1; col++) {
-        for (int row = 0; row <= 1; row++) {
-            score += evaluateLine(col, row, 1, 1, player);
-        }
-    }
-
-    // Diagonal (top-right to bottom-left)
-    for (int col = 3; col < 5; col++) {
-        for (int row = 0; row <= 1; row++) {
-            score += evaluateLine(col, row, -1, 1, player);
-        }
+    for (const auto& line : ANTI_DIAG_LINES) {
+        score += evaluateLine(line[0], line[1], line[2], line[3], player);
     }
 
     return score;
 }
 
-int GameState::evaluateLine(int startCol, int startRow, int deltaCol, int deltaRow, PieceOwner player) const {
-    int playerPieces = 0;
-    int opponentPieces = 0;
+int GameState::evaluateLine(int startCol, int startRow, int dCol, int dRow, PieceOwner player) const {
+    int playerCount = 0, opponentCount = 0;
 
     for (int i = 0; i < 4; i++) {
-        Piece* piece = getPieceAt(startCol + i * deltaCol, startRow + i * deltaRow);
-        if (piece) {
-            if (piece->getOwner() == player) {
-                playerPieces++;
-            }
-            else {
-                opponentPieces++;
-            }
+        Piece* p = m_board[startCol + i * dCol][startRow + i * dRow];
+        if (p) {
+            if (p->getOwner() == player) playerCount++;
+            else opponentCount++;
         }
     }
 
-    // If opponent has pieces in this line, it's not viable for us
-    if (opponentPieces > 0 && playerPieces > 0) return 0;
+    // Line blocked by opponent - not valuable
+    if (opponentCount > 0 && playerCount > 0) return 0;
 
-    // Score based on how many pieces we have in a line
-    if (playerPieces == 3) return 100;  // Three in a row is very valuable
-    if (playerPieces == 2) return 10;   // Two in a row
-    if (playerPieces == 1) return 1;    // One piece
+    if (playerCount == 3) return 100;  // Very valuable
+    if (playerCount == 2) return 10;
+    if (playerCount == 1) return 1;
 
     return 0;
 }
@@ -288,15 +332,13 @@ int GameState::evaluateLine(int startCol, int startRow, int deltaCol, int deltaR
 int GameState::evaluateCenterControl(PieceOwner player) const {
     int score = 0;
 
-    // Center square (2,2) is most valuable
-    Piece* center = getPieceAt(2, 2);
-    if (center && center->getOwner() == player) score += 3;
+    // Center (2,2) is most valuable
+    if (Piece* p = m_board[2][2]; p && p->getOwner() == player) score += 3;
 
     // Adjacent to center
-    const int adjacent[][2] = { {1,1}, {1,2}, {1,3}, {2,1}, {2,3}, {3,1}, {3,2}, {3,3} };
-    for (auto& pos : adjacent) {
-        Piece* piece = getPieceAt(pos[0], pos[1]);
-        if (piece && piece->getOwner() == player) score += 1;
+    static constexpr int adj[8][2] = { {1,1},{1,2},{1,3},{2,1},{2,3},{3,1},{3,2},{3,3} };
+    for (const auto& pos : adj) {
+        if (Piece* p = m_board[pos[0]][pos[1]]; p && p->getOwner() == player) score++;
     }
 
     return score;
