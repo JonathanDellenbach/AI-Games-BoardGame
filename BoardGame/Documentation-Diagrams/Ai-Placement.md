@@ -1,3 +1,4 @@
+```mermaid
 flowchart TD
     A[findBestPlacement called] --> B[Check if piece exists]
     B -->|No piece| C[Return -1, -1]
@@ -11,4 +12,6 @@ flowchart TD
     I --> K{More positions?}
     J --> K
     K -->|Yes| E
+
     K -->|No| L[Return best position]
+```
