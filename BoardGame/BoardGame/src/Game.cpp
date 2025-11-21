@@ -60,6 +60,10 @@ void Game::processEvents()
             if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
                 handleMouseClick(mouseEvent->position.x, mouseEvent->position.y);
             }
+            else if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Right) {
+                m_selectedPiece = nullptr;
+                clearAllHighlights();
+            }
         }
     }
 }
@@ -125,7 +129,7 @@ void Game::executeAIPlacement()
     if (m_aiPiecesPlaced >= 5) return;
 
     Piece* pieceToPlace = m_aiPieces[m_aiPiecesPlaced];
-    auto placement = m_ai.findBestPlacement(m_gameState, pieceToPlace);
+    auto placement = m_ai.findBestPlacement(m_gameState, pieceToPlace); // Just a basic heuristc, no need to use full search when board not full
 
     if (placement.first >= 0 && placement.second >= 0) {
         sf::RectangleShape* cell = m_board.getGameBoardCell(placement.first, placement.second);
@@ -137,6 +141,7 @@ void Game::executeAIPlacement()
 
             std::cout << "AI placed piece at (" << placement.first << ", " << placement.second << ")" << std::endl;
 
+            // Change the phase
             if (m_playerPiecesPlaced >= 5 && m_aiPiecesPlaced >= 5) {
                 m_gameState.setPhase(GamePhase::MOVEMENT);
                 std::cout << "\n=== Movement Phase Started ===" << std::endl;

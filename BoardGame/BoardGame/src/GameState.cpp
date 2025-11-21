@@ -83,9 +83,11 @@ bool GameState::isValidMove(const Move& move) const {
     return move.piece->isValidMove(*this, move.fromCol, move.fromRow, move.toCol, move.toRow);
 }
 
+
+// NOTE WILL HAVE TO MAKE THIS MRORE READABLE AND SUCH, MIGHT PASS THE PIECE FOR EVALS INSTEAD OF REDOING THEM HERE!!!!!!!!!!!!!!!
 std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
     std::vector<Move> moves;
-    moves.reserve(50);  // Pre-allocate for efficiency
+    moves.reserve(50); 
 
     // First pass: find all pieces belonging to player
     for (int fromCol = 0; fromCol < 5; fromCol++) {
@@ -152,7 +154,6 @@ std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
                         && !m_board[landCol][landRow]) {
                         moves.emplace_back(fromCol, fromRow, landCol, landRow, piece);
                     }
-                    // Frog cannot skip empty squares, so only ONE landing spot per direction
                 }
             }
         }
@@ -282,15 +283,20 @@ bool GameState::checkLine(int startCol, int startRow, int dCol, int dRow, PieceO
 
 
 int GameState::evaluate(PieceOwner player) const {
+    // Check win/loss
     PieceOwner winner = getWinner();
-    if (winner == player) return 10000;
-    if (winner != PieceOwner::NONE) return -10000;
+    if (winner == player) return 10000; // max for the current player moving
+    if (winner != PieceOwner::NONE) return -10000; // min for the other player
 
     int score = 0;
     PieceOwner opponent = (player == PieceOwner::PLAYER) ? PieceOwner::AI : PieceOwner::PLAYER;
 
+    // Note: these are just basic heuritics for fallbacks really
+    // Score based on winning lines, 3 in a row, 2 in a wor etc
     score += evaluateLines(player) * 10;
     score -= evaluateLines(opponent) * 10;
+
+    // Score based on center control
     score += evaluateCenterControl(player) * 5;
     score -= evaluateCenterControl(opponent) * 5;
 
@@ -300,10 +306,11 @@ int GameState::evaluate(PieceOwner player) const {
 int GameState::evaluateLines(PieceOwner player) const {
     int score = 0;
 
-    // Use pre-computed line data
+    // Check all possible 4-in-a-row lines on the board
     for (const auto& line : WIN_LINES) {
         score += evaluateLine(line[0], line[1], line[2], line[3], player);
     }
+    // Check anti-diagonal lines (top-right to bottom-left)
     for (const auto& line : ANTI_DIAG_LINES) {
         score += evaluateLine(line[0], line[1], line[2], line[3], player);
     }
@@ -312,22 +319,24 @@ int GameState::evaluateLines(PieceOwner player) const {
 }
 
 int GameState::evaluateLine(int startCol, int startRow, int dCol, int dRow, PieceOwner player) const {
-    int playerCount = 0, opponentCount = 0;
+    int playerCount = 0, opponentCount = 0; // Piece count
 
     for (int i = 0; i < 4; i++) {
         Piece* p = m_board[startCol + i * dCol][startRow + i * dRow];
         if (p) {
-            if (p->getOwner() == player) playerCount++;
+            if (p->getOwner() == player) 
+                playerCount++;
             else opponentCount++;
         }
     }
 
-    // Line blocked by opponent - not valuable
+    // Line blocked by opponent
     if (opponentCount > 0 && playerCount > 0) return 0;
 
+    // Score based on how many pieces we have in line
     if (playerCount == 3) return 100;  // Very valuable
     if (playerCount == 2) return 10;
-    if (playerCount == 1) return 1;
+    if (playerCount == 1) return 1; // Least
 
     return 0;
 }
@@ -336,11 +345,16 @@ int GameState::evaluateCenterControl(PieceOwner player) const {
     int score = 0;
 
     // Center (2,2) is most valuable
-    if (Piece* p = m_board[2][2]; p && p->getOwner() == player) score += 3;
+    if (Piece* p = m_board[2][2]; p && p->getOwner() == player) 
+        score += 3;
 
     // Adjacent to center
-    static constexpr int adj[8][2] = { {1,1},{1,2},{1,3},{2,1},{2,3},{3,1},{3,2},{3,3} };
-    for (const auto& pos : adj) {
+    static constexpr int adj[8][2] = {
+        {1,1}, {1,2}, {1,3},  
+        {2,1},        {2,3},   
+        {3,1}, {3,2}, {3,3}
+    };
+    for (const auto& pos : adj) { // Any piece near center ++
         if (Piece* p = m_board[pos[0]][pos[1]]; p && p->getOwner() == player) score++;
     }
 

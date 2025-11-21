@@ -2,7 +2,7 @@
 
 #include "GameState.h"
 #include <limits>
-#include <utility>
+#include <vector>
 
 class MiniMax
 {
@@ -10,26 +10,39 @@ public:
     MiniMax();
     ~MiniMax();
 
-
+    // Public API
     Move findBestMove(const GameState& state, int depth);
-
     std::pair<int, int> findBestPlacement(const GameState& state, Piece* piece);
 
-    void setDepth(int depth) { m_depth = depth; }
-
-    // Statistics for debugging/display
-    int getNodesEvaluated() const { return m_nodesEvaluated; }
-    int getPruneCount() const { return m_pruneCount; }
-
 private:
+    // Evaluation
+    int evaluatePosition(const GameState& state, int col, int row, Piece* piece);
+
+    // Minimax algorithm
     int alphaBeta(const GameState& state, int depth, int alpha, int beta,
-        bool maximizing, PieceOwner aiPlayer);
+        bool isMaximizingPlayer, PieceOwner aiPlayer);
 
-    int evaluatePlacement(const GameState& state, int col, int row,
-        Piece* piece, PieceOwner aiPlayer);
+    int maximizeScore(const GameState& state, const std::vector<Move>& moves,
+        int depth, int alpha, int beta, PieceOwner aiPlayer);
 
+    int minimizeScore(const GameState& state, const std::vector<Move>& moves,
+        int depth, int alpha, int beta, PieceOwner aiPlayer);
+
+    // Utilities
+    PieceOwner getOpponent(PieceOwner player) const;
+    bool isValidPosition(int col, int row) const;
+    void resetStatistics();
+
+    // Members
     int m_depth;
     int m_nodesEvaluated;
     int m_pruneCount;
+
+    // Constants
+    static constexpr int MIN_SCORE = std::numeric_limits<int>::min();
+    static constexpr int MAX_SCORE = std::numeric_limits<int>::max();
+    static constexpr int WIN_SCORE = 10000;
+    static constexpr int LOSS_SCORE = -10000;
+    static constexpr int NON_TERMINAL = 0;
 };
 
