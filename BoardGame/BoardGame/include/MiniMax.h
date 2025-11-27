@@ -8,6 +8,7 @@ class MiniMax
 {
 public:
     MiniMax();
+    MiniMax(PieceOwner player);
     ~MiniMax();
 
     // Public API
@@ -37,6 +38,7 @@ private:
     int m_depth;
     int m_nodesEvaluated;
     int m_pruneCount;
+    PieceOwner m_player; //which player the player AI represents
 
     // Constants
     static constexpr int MIN_SCORE = std::numeric_limits<int>::min();

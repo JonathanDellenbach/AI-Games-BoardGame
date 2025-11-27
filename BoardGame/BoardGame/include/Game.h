@@ -12,6 +12,10 @@
 
 #include <vector>
 
+enum class GameMode {
+    PLAYER_VS_AI,
+    AI_VS_AI
+};
 
 class Game
 {
@@ -46,24 +50,33 @@ private:
     // AI execution
     void executeAIPlacement();
     void executeAIMove();
+    void executePlayerAIPlacement();
+    void executePlayerAIMove();
 
     // Ui Helpters
     void highlightValidPlacements();
     void highlightValidMoves();
     void clearAllHighlights();
     void switchTurn();
-
+    void renderModeSelection();
 
     // Game Comps
     Board m_board;
     GameState m_gameState;
-    MiniMax m_ai;
+    MiniMax m_ai{ PieceOwner::AI }; // ai
+    MiniMax m_playerAI{ PieceOwner::PLAYER }; //ai as player
 
     // General SFML and locals
     sf::RenderWindow window;
     sf::Font font;
     bool exitGame = false;
     bool m_gameValid = false;
+
+    GameMode m_gameMode;
+    bool m_modeSelected = false;
+    sf::Clock m_aiMoveTimer;
+    float m_aiMoveDelay;
+    bool m_waitingForNextMove;
 
     // Pieces
     std::vector<std::unique_ptr<Piece>> m_allPieces;

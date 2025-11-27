@@ -6,6 +6,15 @@ MiniMax::MiniMax()
     : m_depth(3)
     , m_nodesEvaluated(0)
     , m_pruneCount(0)
+    , m_player(PieceOwner::AI)
+{
+}
+
+MiniMax::MiniMax(PieceOwner player)
+    : m_depth(3)
+    , m_nodesEvaluated(0)
+    , m_pruneCount(0)
+    , m_player(player)
 {
 }
 
@@ -38,8 +47,10 @@ Move MiniMax::findBestMove(const GameState& state, int depth)
         simulatedState.applyMove(move, false); // Simulate moving a piece but dont actually move it
 
         // Look ahead with alphabeta for players min
-        int moveScore = alphaBeta(simulatedState, depth - 1, alpha, beta,
-            false, PieceOwner::AI); // Keep false, want to mini the player
+        /*int moveScore = alphaBeta(simulatedState, depth - 1, alpha, beta, //replacing this as we were hardcoding the AI
+            false, PieceOwner::AI);*/ // Keep false, want to mini the player
+
+        int moveScore = alphaBeta(simulatedState, depth - 1, alpha, beta, false, m_player);
 
         if (moveScore > bestScore) {
             bestScore = moveScore;
@@ -101,7 +112,8 @@ int MiniMax::evaluatePosition(const GameState& state, int col, int row, Piece* p
     // Simulate placement and evaluate board
     GameState simulatedState = state; 
     simulatedState.applyPlacement(col, row, piece);
-    score += simulatedState.evaluate(PieceOwner::AI) / 2; // how good is board after placement?
+    //score += simulatedState.evaluate(PieceOwner::AI) / 2; // how good is board after placement?
+    score += simulatedState.evaluate(m_player) / 2;
 
     // F3
     // Adjacency for pieces near friendly pieces

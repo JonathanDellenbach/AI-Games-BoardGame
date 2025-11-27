@@ -8,8 +8,17 @@ Game::Game() :
     m_selectedPieceIndex(-1),
     m_pieceSelected(false),
     m_playerPiecesPlaced(0),
-    m_aiPiecesPlaced(0)
+    m_aiPiecesPlaced(0),
+    m_gameMode(GameMode::PLAYER_VS_AI),
+    m_modeSelected(false),
+    m_aiMoveDelay(0.5f),
+    m_waitingForNextMove(false)
 {
+    if (!font.openFromFile("ASSETS/FONTS/Jersey20-Regular.ttf")) 
+    {
+        std::cout << "Error loading font!" << std::endl;
+    }
+
     initializePieces();
     m_gameValid = validateGame();
     std::cout << "Player Turn" << std::endl;
@@ -55,14 +64,17 @@ void Game::processEvents()
         if (newEvent->is<sf::Event::KeyPressed>()) {
             processKeys(newEvent);
         }
-        if (newEvent->is<sf::Event::MouseButtonPressed>()) {
-            auto* mouseEvent = newEvent->getIf<sf::Event::MouseButtonPressed>();
-            if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
-                handleMouseClick(mouseEvent->position.x, mouseEvent->position.y);
-            }
-            else if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Right) {
-                m_selectedPiece = nullptr;
-                clearAllHighlights();
+        if (m_gameMode == GameMode::PLAYER_VS_AI) //Only handle mouse if its Player vs Ai
+        {
+            if (newEvent->is<sf::Event::MouseButtonPressed>()) {
+                auto* mouseEvent = newEvent->getIf<sf::Event::MouseButtonPressed>();
+                if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Left) {
+                    handleMouseClick(mouseEvent->position.x, mouseEvent->position.y);
+                }
+                else if (mouseEvent && mouseEvent->button == sf::Mouse::Button::Right) {
+                    m_selectedPiece = nullptr;
+                    clearAllHighlights();
+                }
             }
         }
     }
@@ -74,6 +86,24 @@ void Game::processKeys(const std::optional<sf::Event> t_event)
     if (sf::Keyboard::Key::Escape == newKeypress->code)
     {
         exitGame = true;
+    }
+
+    if (!m_modeSelected)
+    {
+        if (sf::Keyboard::Key::Num1 == newKeypress->code)
+        {
+            m_gameMode = GameMode::PLAYER_VS_AI;
+            m_modeSelected = true;
+            std::cout << "Player vs AI mode selected!" << std::endl;
+            std::cout << "Player Turn" << std::endl;
+        }
+        else if (sf::Keyboard::Key::Num2 == newKeypress->code)
+        {
+            m_gameMode = GameMode::AI_VS_AI;
+            m_modeSelected = true;
+            std::cout << "AI vs AI mode selected!" << std::endl;
+            std::cout << "Player Turn" << std::endl;
+        }
     }
 }
 
@@ -93,6 +123,11 @@ void Game::update(sf::Time t_deltaTime)
         window.close();
     }
 
+    if (!m_modeSelected)
+    {
+        return;
+    }
+
     // Check for win condition
     PieceOwner winner = m_gameState.getWinner();
     if (winner != PieceOwner::NONE)
@@ -107,21 +142,66 @@ void Game::update(sf::Time t_deltaTime)
         return;
     }
 
-    // AI turn
-    if (m_currentTurn == PieceOwner::AI && m_gameState.getCurrentPhase() != GamePhase::GAME_OVER) {
-        sf::sleep(sf::seconds(0.25f));
-
-        if (m_gameState.getCurrentPhase() == GamePhase::PLACEMENT) {
-            executeAIPlacement();
-        }
-        else if (m_gameState.getCurrentPhase() == GamePhase::MOVEMENT) {
-            executeAIMove();
-        }
-
-        switchTurn();
+    if (m_gameState.getCurrentPhase() == GamePhase::GAME_OVER) //check turns depending on mode
+    { 
+        return;
     }
 
+    if (m_gameMode == GameMode::AI_VS_AI) 
+    {
+        if (!m_waitingForNextMove) //Time based bool. Down below in the "else" the timer counts
+        {
+            //play current Player AIs move
+            if (m_currentTurn == PieceOwner::PLAYER) 
+            {
+                if (m_gameState.getCurrentPhase() == GamePhase::PLACEMENT) 
+                {
+                    executePlayerAIPlacement();
+                }
+                else if (m_gameState.getCurrentPhase() == GamePhase::MOVEMENT) 
+                {
+                    executePlayerAIMove();
+                }
+            }
+            else //AI turn
+            { 
+                if (m_gameState.getCurrentPhase() == GamePhase::PLACEMENT) 
+                {
+                    executeAIPlacement();
+                }
+                else if (m_gameState.getCurrentPhase() == GamePhase::MOVEMENT) 
+                {
+                    executeAIMove();
+                }
+            }
 
+            switchTurn();
+            m_waitingForNextMove = true;
+            m_aiMoveTimer.restart(); //start timer 
+        }
+        else //wait for timer to finish then move
+        { 
+            if (m_aiMoveTimer.getElapsedTime().asSeconds() >= m_aiMoveDelay) 
+            {
+                m_waitingForNextMove = false;
+            }
+        }
+    }
+    else // AI turn
+    {
+        if (m_currentTurn == PieceOwner::AI && m_gameState.getCurrentPhase() != GamePhase::GAME_OVER) {
+            sf::sleep(sf::seconds(0.25f));
+
+            if (m_gameState.getCurrentPhase() == GamePhase::PLACEMENT) {
+                executeAIPlacement();
+            }
+            else if (m_gameState.getCurrentPhase() == GamePhase::MOVEMENT) {
+                executeAIMove();
+            }
+
+            switchTurn();
+        }
+    }
 }
 
 void Game::executeAIPlacement()
@@ -176,6 +256,11 @@ void Game::render()
     // Render all pieces
     for (auto& piece : m_allPieces) {
         piece->render(window);
+    }
+
+    if (!m_modeSelected)
+    {
+        renderModeSelection();
     }
 
     window.display();
@@ -477,4 +562,75 @@ void Game::switchTurn()
 {
     m_currentTurn = (m_currentTurn == PieceOwner::PLAYER) ? PieceOwner::AI : PieceOwner::PLAYER;
     std::cout << (m_currentTurn == PieceOwner::PLAYER ? "\nPlayer's Turn" : "\nAI's Turn") << std::endl;
+}
+
+void Game::renderModeSelection()
+{
+    sf::Text titleText(font);
+    titleText.setString("SELECT GAME MODE");
+    titleText.setCharacterSize(40);
+    titleText.setFillColor(sf::Color::White);
+    titleText.setPosition({ 1100.0f, 400.0f });
+
+    sf::Text option1Text(font);
+    option1Text.setString("Press 1 for Player VS AI");
+    option1Text.setCharacterSize(30);
+    option1Text.setFillColor(sf::Color::White);
+    option1Text.setPosition({ 1100.0f, 500.0f });
+
+    sf::Text option2Text(font);
+    option2Text.setString("Press 2 for AI VS AI");
+    option2Text.setCharacterSize(30);
+    option2Text.setFillColor(sf::Color::White);
+    option2Text.setPosition({ 1100.0f, 560.0f });
+
+    window.draw(titleText);
+    window.draw(option1Text);
+    window.draw(option2Text);
+}
+
+void Game::executePlayerAIPlacement() // Handles Player AI Placement during AI vs AI
+{
+    if (m_playerPiecesPlaced >= 5) return;
+
+    Piece* pieceToPlace = m_playerPieces[m_playerPiecesPlaced]; //get unplaced piece
+    auto placement = m_playerAI.findBestPlacement(m_gameState, pieceToPlace); //find best place
+
+    if (placement.first >= 0 && placement.second >= 0) //verify placement
+    {
+        sf::RectangleShape* cell = m_board.getGameBoardCell(placement.first, placement.second);
+        if (cell) 
+        {
+            sf::Vector2f cellPos = cell->getPosition();
+            pieceToPlace->setPosition(cellPos.x, cellPos.y);
+            m_gameState.applyPlacement(placement.first, placement.second, pieceToPlace);
+            m_playerPiecesPlaced++;
+
+            std::cout << "Player AI placed piece at (" << placement.first << ", " << placement.second << ")" << std::endl;
+
+            if (m_playerPiecesPlaced >= 5 && m_aiPiecesPlaced >= 5) //if all pieces are placed move to movement phase
+            {
+                m_gameState.setPhase(GamePhase::MOVEMENT);
+                std::cout << "\n=== Movement Phase Started ===" << std::endl;
+            }
+        }
+    }
+}
+
+void Game::executePlayerAIMove() //Handles Ai Placement during AI vs AI in Movement Phase
+{
+    Move playerAIMove = m_playerAI.findBestMove(m_gameState, 3); //use minimax for best move
+
+    if (playerAIMove.piece)  //verify the move
+    {
+        sf::RectangleShape* cell = m_board.getGameBoardCell(playerAIMove.toCol, playerAIMove.toRow);
+        if (cell) //get cell and place sprite
+        {
+            sf::Vector2f cellPos = cell->getPosition();
+            playerAIMove.piece->setPosition(cellPos.x, cellPos.y);
+        }
+        m_gameState.applyMove(playerAIMove); //apply to the game state
+        std::cout << "Player AI moved from (" << playerAIMove.fromCol << "," << playerAIMove.fromRow<< ") to (" << playerAIMove.toCol 
+            << "," << playerAIMove.toRow << ")" << std::endl;
+    }
 }
