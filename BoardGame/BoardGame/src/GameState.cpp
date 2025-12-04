@@ -18,7 +18,6 @@ static constexpr int ANTI_DIAG_LINES[4][4] = {
     {3,0,-1,1}, {4,0,-1,1}, {3,1,-1,1}, {4,1,-1,1}
 };
 
-// CRITICAL FIX: This should be static, not global per-instance
 static uint64_t ZOBRIST[5][5][3][2];
 static bool zobristInitialized = false;
 
