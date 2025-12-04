@@ -11,13 +11,14 @@ public:
     MiniMax(PieceOwner player);
     ~MiniMax();
 
-    // Public API
     Move findBestMove(const GameState& state, int depth);
     std::pair<int, int> findBestPlacement(const GameState& state, Piece* piece);
 
 private:
     // Evaluation
     int evaluatePosition(const GameState& state, int col, int row, Piece* piece);
+    int evaluateBlockingPotential(const GameState& state, int col, int row, PieceOwner opponent) const;
+    int evaluateOffensivePotential(const GameState& state, int col, int row, Piece* piece) const;
 
     // Minimax algorithm
     int alphaBeta(const GameState& state, int depth, int alpha, int beta,

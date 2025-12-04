@@ -63,14 +63,10 @@ bool Frog::canJumpTo(const GameState& state, int fromCol, int fromRow,
         return false; // No adjacent piece to jump over
     }
 
-    // After jumping over adjacent piece, frog lands on the first empty square
-    // The frog cannot skip over empty squares to land further away
-
     // Walk from the adjacent piece towards destination
     int currentCol = firstCol + dirCol;
     int currentRow = firstRow + dirRow;
 
-    // Track if passed any empty squares
     bool passedEmptySquare = false;
 
     while (currentCol != toCol || currentRow != toRow) {
@@ -80,13 +76,11 @@ bool Frog::canJumpTo(const GameState& state, int fromCol, int fromRow,
         }
 
         if (state.isPositionEmpty(currentCol, currentRow)) {
-            // Found an empty square before our destination
             passedEmptySquare = true;
         }
         else {
             // Found another piece
             if (passedEmptySquare) {
-                // We passed an empty square and now hit a piece
                 // Cannot jump over a piece that's after an empty square
                 return false;
             }
@@ -96,8 +90,5 @@ bool Frog::canJumpTo(const GameState& state, int fromCol, int fromRow,
         currentCol += dirCol;
         currentRow += dirRow;
     }
-
-    // If we get here, the destination square is our target
-    // It's valid only if we haven't passed any empty squares
     return !passedEmptySquare;
 }

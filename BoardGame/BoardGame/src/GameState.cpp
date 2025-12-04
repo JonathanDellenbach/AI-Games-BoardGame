@@ -1,8 +1,7 @@
 #include "GameState.h"
-
+#include <sstream>
 
 // Pre-compile line check data for win detection and evaluation
-// Format: {startCol, startRow, deltaCol, deltaRow}
 static constexpr int WIN_LINES[24][4] = {
     // Horizontal lines
     {0,0,1,0}, {1,0,1,0}, {0,1,1,0}, {1,1,1,0}, {0,2,1,0},
@@ -19,17 +18,23 @@ static constexpr int ANTI_DIAG_LINES[4][4] = {
     {3,0,-1,1}, {4,0,-1,1}, {3,1,-1,1}, {4,1,-1,1}
 };
 
+// CRITICAL FIX: This should be static, not global per-instance
+static uint64_t ZOBRIST[5][5][3][2];
+static bool zobristInitialized = false;
+
 GameState::GameState()
     : m_currentPhase(GamePhase::PLACEMENT)
     , m_currentPlayer(PieceOwner::PLAYER)
     , m_winner(PieceOwner::NONE)
+    , m_zobristKey(0)  // Initialize member variable
 {
-    // Initialize board to empty
     for (int col = 0; col < 5; col++) {
         for (int row = 0; row < 5; row++) {
             m_board[col][row] = nullptr;
         }
     }
+
+    initializeZobrist();
 }
 
 GameState::~GameState() {
@@ -58,48 +63,37 @@ void GameState::removePieceAt(int col, int row) {
 }
 
 bool GameState::isValidPlacement(int col, int row) const {
-    // Must be within bounds and empty
     return col >= 0 && col < 5 && row >= 0 && row < 5 && isPositionEmpty(col, row);
 }
 
 bool GameState::isValidMove(const Move& move) const {
     if (!move.piece) return false;
 
-    // Check bounds
     if (move.toCol < 0 || move.toCol >= 5 || move.toRow < 0 || move.toRow >= 5) {
         return false;
     }
 
-    // Check if starting position matches piece location
     if (getPieceAt(move.fromCol, move.fromRow) != move.piece) return false;
 
-    // Check if destination is empty
     if (!isPositionEmpty(move.toCol, move.toRow)) return false;
 
-    // Can't stay in same place
     if (move.fromCol == move.toCol && move.fromRow == move.toRow) return false;
 
-    // Use piece's movement validation
     return move.piece->isValidMove(*this, move.fromCol, move.fromRow, move.toCol, move.toRow);
 }
 
-
-// NOTE WILL HAVE TO MAKE THIS MRORE READABLE AND SUCH, MIGHT PASS THE PIECE FOR EVALS INSTEAD OF REDOING THEM HERE!!!!!!!!!!!!!!!
 std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
     std::vector<Move> moves;
-    moves.reserve(50); 
+    moves.reserve(50);
 
-    // First pass: find all pieces belonging to player
     for (int fromCol = 0; fromCol < 5; fromCol++) {
         for (int fromRow = 0; fromRow < 5; fromRow++) {
             Piece* piece = m_board[fromCol][fromRow];
             if (!piece || piece->getOwner() != player) continue;
 
-            // Generate moves based on piece type for efficiency
             PieceType type = piece->getType();
 
             if (type == PieceType::DONKEY) {
-                // Donkey: only 4 cardinal directions
                 static constexpr int cardinalDirs[4][2] = { {0,1},{0,-1},{1,0},{-1,0} };
                 for (auto& d : cardinalDirs) {
                     int tc = fromCol + d[0], tr = fromRow + d[1];
@@ -109,7 +103,6 @@ std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
                 }
             }
             else if (type == PieceType::SNAKE) {
-                // Snake: 8 directions, 1 step
                 static constexpr int allDirs[8][2] = { {-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1} };
                 for (auto& d : allDirs) {
                     int tc = fromCol + d[0], tr = fromRow + d[1];
@@ -119,10 +112,8 @@ std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
                 }
             }
             else if (type == PieceType::FROG) {
-                // Frog: 8 directions for single step, plus jump moves
                 static constexpr int allDirs[8][2] = { {-1,-1},{-1,0},{-1,1},{0,-1},{0,1},{1,-1},{1,0},{1,1} };
 
-                // Single step moves
                 for (auto& d : allDirs) {
                     int tc = fromCol + d[0], tr = fromRow + d[1];
                     if (tc >= 0 && tc < 5 && tr >= 0 && tr < 5 && !m_board[tc][tr]) {
@@ -130,26 +121,20 @@ std::vector<Move> GameState::getLegalMoves(PieceOwner player) const {
                     }
                 }
 
-                // Jump moves: check each direction for adjacent piece then find landing spot
-                // Frog can only land on the FIRST empty square after jumping over pieces
                 for (auto& d : allDirs) {
                     int adjCol = fromCol + d[0], adjRow = fromRow + d[1];
 
-                    // Must have adjacent piece to jump over
                     if (adjCol < 0 || adjCol >= 5 || adjRow < 0 || adjRow >= 5) continue;
-                    if (!m_board[adjCol][adjRow]) continue;  // No piece to jump
+                    if (!m_board[adjCol][adjRow]) continue;
 
-                    // Skip over consecutive pieces, then land on first empty
                     int landCol = adjCol + d[0], landRow = adjRow + d[1];
 
-                    // Skip over any consecutive pieces
                     while (landCol >= 0 && landCol < 5 && landRow >= 0 && landRow < 5
                         && m_board[landCol][landRow]) {
                         landCol += d[0];
                         landRow += d[1];
                     }
 
-                    // Land on the first empty square (if in bounds)
                     if (landCol >= 0 && landCol < 5 && landRow >= 0 && landRow < 5
                         && !m_board[landCol][landRow]) {
                         moves.emplace_back(fromCol, fromRow, landCol, landRow, piece);
@@ -178,17 +163,23 @@ std::vector<std::pair<int, int>> GameState::getLegalPlacements() const {
 
 void GameState::applyMove(const Move& move, bool updatePiecePosition) {
     if (!move.piece) return;
-    m_board[move.fromCol][move.fromRow] = nullptr; //remove old pos
-    m_board[move.toCol][move.toRow] = move.piece; //place at new position
+    Piece* piece = move.piece;
+    updateZobrist(piece, move.fromCol, move.fromRow, false);
+    m_board[move.fromCol][move.fromRow] = nullptr; // Remove old pos
 
-    if (updatePiecePosition) //we added the flag to control whether we update the piece or not
+    // Add new position
+    updateZobrist(piece, move.toCol, move.toRow, true);
+    m_board[move.toCol][move.toRow] = piece;
+
+    if (updatePiecePosition)
     {
-        move.piece->setGridPosition(move.toCol, move.toRow); //when making real moves its true when simulating moves its false in minimax
+        move.piece->setGridPosition(move.toCol, move.toRow); // only move when true (for simulation make sure its false)
     }
 }
 
 void GameState::applyPlacement(int col, int row, Piece* piece) {
     if (piece && col >= 0 && col < 5 && row >= 0 && row < 5 && !m_board[col][row]) {
+        updateZobrist(piece, col, row, true);
         m_board[col][row] = piece;
         piece->setGridPosition(col, row);
     }
@@ -197,7 +188,7 @@ void GameState::applyPlacement(int col, int row, Piece* piece) {
 bool GameState::isWinningState(PieceOwner player) const {
     // Check horizontal lines
     for (int row = 0; row < 5; row++) {
-        for (int col = 0; col <= 1; col++) {  // Can start at 0 or 1
+        for (int col = 0; col <= 1; col++) {
             int count = 0;
             for (int i = 0; i < 4; i++) {
                 Piece* piece = getPieceAt(col + i, row);
@@ -214,7 +205,7 @@ bool GameState::isWinningState(PieceOwner player) const {
 
     // Check vertical lines
     for (int col = 0; col < 5; col++) {
-        for (int row = 0; row <= 1; row++) {  // Can start at 0 or 1
+        for (int row = 0; row <= 1; row++) {
             int count = 0;
             for (int i = 0; i < 4; i++) {
                 Piece* piece = getPieceAt(col, row + i);
@@ -272,6 +263,25 @@ PieceOwner GameState::getWinner() const {
     return PieceOwner::NONE;
 }
 
+void GameState::initializeZobrist()
+{
+    // Only initialize once globally
+    if (!zobristInitialized) {
+        std::mt19937_64 rng(12345);
+
+        for (int col = 0; col < 5; col++) {
+            for (int row = 0; row < 5; row++) {
+                for (int type = 0; type < 3; type++) {    // Frog, Snake, Donkey
+                    for (int owner = 0; owner < 2; owner++) { // Player, AI
+                        ZOBRIST[col][row][type][owner] = rng();
+                    }
+                }
+            }
+        }
+        zobristInitialized = true;
+    }
+}
+
 bool GameState::checkLine(int startCol, int startRow, int dCol, int dRow, PieceOwner player) const
 {
     for (int i = 0; i < 4; i++) {
@@ -285,20 +295,21 @@ bool GameState::checkLine(int startCol, int startRow, int dCol, int dRow, PieceO
 int GameState::evaluate(PieceOwner player) const {
     // Check win/loss
     PieceOwner winner = getWinner();
-    if (winner == player) return 10000; // max for the current player moving
-    if (winner != PieceOwner::NONE) return -10000; // min for the other player
+    if (winner == player) return 10000;
+    if (winner != PieceOwner::NONE) return -10000;
 
     int score = 0;
     PieceOwner opponent = (player == PieceOwner::PLAYER) ? PieceOwner::AI : PieceOwner::PLAYER;
 
-    // Note: these are just basic heuritics for fallbacks really
-    // Score based on winning lines, 3 in a row, 2 in a wor etc
-    score += evaluateLines(player) * 10;
-    score -= evaluateLines(opponent) * 10;
+    // Offensive score (player winning lines)
+    score += evaluateLines(player) * 15;
 
-    // Score based on center control
-    score += evaluateCenterControl(player) * 5;
-    score -= evaluateCenterControl(opponent) * 5;
+    // Defensive score (block opponent's winning lines) - make sure Ai makes this priority
+    score -= evaluateLines(opponent) * 20;
+
+    // Center control differential
+    score += evaluateCenterControl(player) * 3;
+    score -= evaluateCenterControl(opponent) * 3;
 
     return score;
 }
@@ -306,11 +317,12 @@ int GameState::evaluate(PieceOwner player) const {
 int GameState::evaluateLines(PieceOwner player) const {
     int score = 0;
 
-    // Check all possible 4-in-a-row lines on the board
+    // All 4 in a rows
     for (const auto& line : WIN_LINES) {
         score += evaluateLine(line[0], line[1], line[2], line[3], player);
     }
-    // Check anti-diagonal lines (top-right to bottom-left)
+
+    // Anti - diagonal checks
     for (const auto& line : ANTI_DIAG_LINES) {
         score += evaluateLine(line[0], line[1], line[2], line[3], player);
     }
@@ -318,45 +330,85 @@ int GameState::evaluateLines(PieceOwner player) const {
     return score;
 }
 
+
 int GameState::evaluateLine(int startCol, int startRow, int dCol, int dRow, PieceOwner player) const {
-    int playerCount = 0, opponentCount = 0; // Piece count
+    int playerCount = 0;
+    int opponentCount = 0;
+    int emptyCount = 0;
 
     for (int i = 0; i < 4; i++) {
         Piece* p = m_board[startCol + i * dCol][startRow + i * dRow];
         if (p) {
-            if (p->getOwner() == player) 
+            if (p->getOwner() == player)
                 playerCount++;
-            else opponentCount++;
+            else
+                opponentCount++;
+        }
+        else {
+            emptyCount++;
         }
     }
 
-    // Line blocked by opponent
+    // Line blocked by oppoentn
     if (opponentCount > 0 && playerCount > 0) return 0;
 
-    // Score based on how many pieces we have in line
-    if (playerCount == 3) return 100;  // Very valuable
-    if (playerCount == 2) return 10;
-    if (playerCount == 1) return 1; // Least
+    // Score based on the player and op counts for lines
+    if (playerCount > 0 && opponentCount == 0) {
+        if (playerCount == 3 && emptyCount == 1) return 150;  // very valuable r
+        if (playerCount == 2 && emptyCount == 2) return 20;   // mid
+        if (playerCount == 1 && emptyCount == 3) return 2;    // least
+    }
 
     return 0;
 }
 
+
 int GameState::evaluateCenterControl(PieceOwner player) const {
     int score = 0;
 
-    // Center (2,2) is most valuable
-    if (Piece* p = m_board[2][2]; p && p->getOwner() == player) 
-        score += 3;
-
-    // Adjacent to center
-    static constexpr int adj[8][2] = {
-        {1,1}, {1,2}, {1,3},  
-        {2,1},        {2,3},   
-        {3,1}, {3,2}, {3,3}
+    // Scoring map for board positions
+    static constexpr int POSITION_VALUES[5][5] = {
+        {1, 2, 3, 2, 1},
+        {2, 4, 5, 4, 2},
+        {3, 5, 8, 5, 3},
+        {2, 4, 5, 4, 2},
+        {1, 2, 3, 2, 1}
     };
-    for (const auto& pos : adj) { // Any piece near center ++
-        if (Piece* p = m_board[pos[0]][pos[1]]; p && p->getOwner() == player) score++;
+
+    for (int col = 0; col < 5; col++) {
+        for (int row = 0; row < 5; row++) {
+            Piece* p = m_board[col][row];
+            if (p && p->getOwner() == player) {
+                score += POSITION_VALUES[row][col];
+            }
+        }
     }
 
     return score;
+}
+
+uint64_t GameState::getBoardHash() const {
+    return m_zobristKey;
+}
+
+void GameState::recordPosition() {
+    m_positionHistory[m_zobristKey]++;
+}
+
+int GameState::getPositionRepetitionCount(uint64_t key) const {
+    auto it = m_positionHistory.find(key);
+    return it == m_positionHistory.end() ? 0 : it->second;
+}
+
+
+void GameState::updateZobrist(Piece* piece, int col, int row, bool add)
+{
+    int type = (int)piece->getType();    // 0–2
+    int owner = (piece->getOwner() == PieceOwner::PLAYER) ? 0 : 1;
+
+    m_zobristKey ^= ZOBRIST[col][row][type][owner];
+}
+
+void GameState::clearPositionHistory() {
+    m_positionHistory.clear();
 }

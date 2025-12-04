@@ -35,6 +35,7 @@ private:
     void checkKeyboardState();
     void update(sf::Time t_deltaTime);
     void render();
+    void renderGameOver();
 
     // Input
     void handleMouseClick(int mouseX, int mouseY);

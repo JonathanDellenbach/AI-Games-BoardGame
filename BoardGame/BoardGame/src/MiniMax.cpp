@@ -1,6 +1,8 @@
 #include "MiniMax.h"
 #include <algorithm>
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
 
 MiniMax::MiniMax()
     : m_depth(3)
@@ -23,41 +25,72 @@ MiniMax::~MiniMax() {}
 // Main entry point for movement phase
 Move MiniMax::findBestMove(const GameState& state, int depth)
 {
-    // Need to reset otherwise evals previous moves
     resetStatistics();
 
-    // Get all the moves can make
-    std::vector<Move> legalMoves = state.getLegalMoves(PieceOwner::AI);
+    std::vector<Move> legalMoves = state.getLegalMoves(m_player);
 
     if (legalMoves.empty()) {
-        std::cout << "MinMax: No legal moves available!" << std::endl;
+        std::cout << "MinMax: No legal moves available" << std::endl;
         return Move();
     }
 
     std::cout << "MinMax: Evaluating " << legalMoves.size() << " moves at depth " << depth << std::endl;
 
+    // Track best moves & repeated moves
     Move bestMove;
-    int bestScore = MIN_SCORE; // Start -infin
-    int alpha = MIN_SCORE; // Best Ai
-    int beta = MAX_SCORE; // Best Player
+    int bestScore = MIN_SCORE;
+    Move bestNonRepeatingMove;
+    int bestNonRepeatingScore = MIN_SCORE;
+    bool foundNonRepeating = false;
+
+    int alpha = MIN_SCORE;
+    int beta = MAX_SCORE;
 
     // Evaluate each move
     for (const Move& move : legalMoves) {
         GameState simulatedState = state;
-        simulatedState.applyMove(move, false); // Simulate moving a piece but dont actually move it
+        simulatedState.applyMove(move, false);
 
-        // Look ahead with alphabeta for players min
-        /*int moveScore = alphaBeta(simulatedState, depth - 1, alpha, beta, //replacing this as we were hardcoding the AI
-            false, PieceOwner::AI);*/ // Keep false, want to mini the player
+        // Check if this position was seen before
+        uint64_t positionHash = simulatedState.getBoardHash();
+        int repetitionCount = state.getPositionRepetitionCount(positionHash);
 
+        // Calculate score using minimax
         int moveScore = alphaBeta(simulatedState, depth - 1, alpha, beta, false, m_player);
 
+        // Apply penalty if position repeats
+        if (repetitionCount > 0) {
+            int penalty = 2000 * repetitionCount;
+            moveScore -= penalty;
+            std::cout << "  Move to (" << move.toCol << "," << move.toRow
+                << ") repeats (seen " << repetitionCount << " times, -" << penalty << ")" << std::endl;
+        }
+
+        // Track overall best move
         if (moveScore > bestScore) {
             bestScore = moveScore;
             bestMove = move;
         }
 
-        alpha = std::max(alpha, bestScore); // Update best for ai
+        // Track best non-repeating move separately
+        if (repetitionCount == 0) {
+            if (moveScore > bestNonRepeatingScore) {
+                bestNonRepeatingScore = moveScore;
+                bestNonRepeatingMove = move;
+                foundNonRepeating = true;
+            }
+            alpha = std::max(alpha, moveScore);
+        }
+    }
+
+    // Prefer non-repeating moves if available
+    if (foundNonRepeating) {
+        std::cout << "Selected non-repeating move (score: " << bestNonRepeatingScore << ")" << std::endl;
+        bestMove = bestNonRepeatingMove;
+        bestScore = bestNonRepeatingScore;
+    }
+    else {
+        std::cout << "All moves repeat - chose least bad (score: " << bestScore << ")" << std::endl;
     }
 
     std::cout << "MiniMax: Nodes evaluated = " << m_nodesEvaluated
@@ -66,57 +99,54 @@ Move MiniMax::findBestMove(const GameState& state, int depth)
     return bestMove;
 }
 
-// Main entry point for placement phase
 std::pair<int, int> MiniMax::findBestPlacement(const GameState& state, Piece* piece)
 {
     if (!piece) {
         return { -1, -1 };
     }
 
-    auto availablePositions = state.getLegalPlacements(); // Get all the boards empty positions
+    auto availablePositions = state.getLegalPlacements();
 
     if (availablePositions.empty()) {
         return { -1, -1 };
     }
 
-    // Start with the first one for best initally
-    std::pair<int, int> bestPosition = availablePositions[0]; // Pair a position to a score
+    std::pair<int, int> bestPosition = availablePositions[0];
     int bestScore = MIN_SCORE;
 
-    // Evaluate each position with simple heuristic
     for (const auto& [col, row] : availablePositions) {
-        int score = evaluatePosition(state, col, row, piece); // Score this cell
+        int score = evaluatePosition(state, col, row, piece);
 
         if (score > bestScore) {
             bestScore = score;
-            bestPosition = { col, row }; // Use the position evaled by bestScore
+            bestPosition = { col, row };
         }
     }
 
     return bestPosition;
 }
 
-// Scores a position based on center control, board state, and adjacency
 int MiniMax::evaluatePosition(const GameState& state, int col, int row, Piece* piece)
 {
     int score = 0;
+    PieceOwner opponent = getOpponent(m_player);
 
-    // F1
-    // Center control (Using Manhattan distance to keep in line with grid constrains)
-    // Make it so center is best and corner is worse, like what we did for the flow vector, same ideaology
-    int distanceFromCenter = std::abs(col - 2) + std::abs(row - 2);
-    // Note: 4 is max distance from center so we have to use thad, 15 is just to make the center control a wright of 0-60, can be anything above 10 really.
-    score += (4 - distanceFromCenter) * 15;
+    // F1: Strategic position value
+    static constexpr int POSITION_VALUES[5][5] = {
+        {2, 3, 4, 3, 2},
+        {3, 5, 6, 5, 3},
+        {4, 6, 10, 6, 4},
+        {3, 5, 6, 5, 3},
+        {2, 3, 4, 3, 2}
+    };
+    score += POSITION_VALUES[row][col] * 8;
 
-    // F2
-    // Simulate placement and evaluate board
-    GameState simulatedState = state; 
+    // F2: Simulate placement and evaluate board state
+    GameState simulatedState = state;
     simulatedState.applyPlacement(col, row, piece);
-    //score += simulatedState.evaluate(PieceOwner::AI) / 2; // how good is board after placement?
-    score += simulatedState.evaluate(m_player) / 2;
+    score += simulatedState.evaluate(m_player) / 3;
 
-    // F3
-    // Adjacency for pieces near friendly pieces
+    // F3: Friendly piece adjacency
     const int DIRECTIONS[8][2] = {
         {-1, -1}, {-1, 0}, {-1, 1},
         { 0, -1},          { 0, 1},
@@ -124,30 +154,126 @@ int MiniMax::evaluatePosition(const GameState& state, int col, int row, Piece* p
     };
 
     int friendlyNeighbors = 0;
-    // Go through board, get friendly piece holders and count for scoring
+    int opponentNeighbors = 0;
+
     for (const auto& [dx, dy] : DIRECTIONS) {
         int neighborCol = col + dx;
         int neighborRow = row + dy;
 
         if (isValidPosition(neighborCol, neighborRow)) {
             Piece* neighbor = state.getPieceAt(neighborCol, neighborRow);
-            if (neighbor && neighbor->getOwner() == PieceOwner::AI) {
-                friendlyNeighbors++;
+            if (neighbor) {
+                if (neighbor->getOwner() == m_player) {
+                    friendlyNeighbors++;
+                }
+                else {
+                    opponentNeighbors++;
+                }
             }
         }
     }
-    score += friendlyNeighbors * 10;
+
+    score += friendlyNeighbors * 12;
+    score += opponentNeighbors * 8;
+
+    // F4: Blocking potential
+    int blockingValue = evaluateBlockingPotential(state, col, row, opponent);
+    score += blockingValue * 25;
+
+    // F5: Offensive potential
+    int offensiveValue = evaluateOffensivePotential(state, col, row, piece);
+    score += offensiveValue * 15;
 
     return score;
 }
 
-// minimax with alpha-beta pruning
+int MiniMax::evaluateBlockingPotential(const GameState& state, int col, int row, PieceOwner opponent) const
+{
+    int blockValue = 0;
+
+    const int DIRECTIONS[4][2] = {
+        {1, 0},   // Horizontal
+        {0, 1},   // Vertical
+        {1, 1},   // Diagonal TL-BR
+        {1, -1}   // Diagonal TR-BL
+    };
+
+    for (const auto& [dx, dy] : DIRECTIONS) {
+        int opponentCount = 0;
+        int emptyCount = 0;
+        int positions = 0;
+
+        for (int i = -3; i <= 3; i++) {
+            if (i == 0) continue;
+
+            int checkCol = col + i * dx;
+            int checkRow = row + i * dy;
+
+            if (!isValidPosition(checkCol, checkRow)) continue;
+
+            Piece* p = state.getPieceAt(checkCol, checkRow);
+            if (p && p->getOwner() == opponent) {
+                opponentCount++;
+            }
+            else if (!p) {
+                emptyCount++;
+            }
+
+            positions++;
+            if (positions >= 3) break;
+        }
+
+        if (opponentCount == 3) blockValue += 100;
+        else if (opponentCount == 2 && emptyCount >= 1) blockValue += 30;
+    }
+
+    return blockValue;
+}
+
+int MiniMax::evaluateOffensivePotential(const GameState& state, int col, int row, Piece* piece) const
+{
+    if (!piece) return 0;
+
+    int offensiveValue = 0;
+    PieceOwner player = piece->getOwner();
+
+    const int DIRECTIONS[4][2] = {
+        {1, 0}, {0, 1}, {1, 1}, {1, -1}
+    };
+
+    for (const auto& [dx, dy] : DIRECTIONS) {
+        int friendlyCount = 0;
+        int emptyCount = 0;
+
+        for (int i = -3; i <= 3; i++) {
+            if (i == 0) continue;
+
+            int checkCol = col + i * dx;
+            int checkRow = row + i * dy;
+
+            if (!isValidPosition(checkCol, checkRow)) continue;
+
+            Piece* p = state.getPieceAt(checkCol, checkRow);
+            if (p && p->getOwner() == player) {
+                friendlyCount++;
+            }
+            else if (!p) {
+                emptyCount++;
+            }
+        }
+
+        if (friendlyCount == 2 && emptyCount >= 1) offensiveValue += 20;
+        if (friendlyCount >= 1 && emptyCount >= 2) offensiveValue += 5;
+    }
+
+    return offensiveValue;
+}
+
 int MiniMax::alphaBeta(const GameState& state, int depth, int alpha, int beta,
     bool isMaximizingPlayer, PieceOwner aiPlayer)
 {
     m_nodesEvaluated++;
 
-    // Game condition: game over
     PieceOwner winner = state.getWinner();
     if (winner == aiPlayer) {
         return WIN_SCORE + depth;
@@ -156,12 +282,10 @@ int MiniMax::alphaBeta(const GameState& state, int depth, int alpha, int beta,
         return LOSS_SCORE - depth;
     }
 
-    // depth limit reached
     if (depth == 0) {
         return state.evaluate(aiPlayer);
     }
 
-    // Get moves for current player (determine player to mini)
     PieceOwner currentPlayer = isMaximizingPlayer ? aiPlayer : getOpponent(aiPlayer);
     std::vector<Move> possibleMoves = state.getLegalMoves(currentPlayer);
 
@@ -169,7 +293,6 @@ int MiniMax::alphaBeta(const GameState& state, int depth, int alpha, int beta,
         return state.evaluate(aiPlayer);
     }
 
-    // Mini or max depending on whose turn
     if (isMaximizingPlayer) {
         return maximizeScore(state, possibleMoves, depth, alpha, beta, aiPlayer);
     }
@@ -178,7 +301,6 @@ int MiniMax::alphaBeta(const GameState& state, int depth, int alpha, int beta,
     }
 }
 
-// AI's turn: maximize score
 int MiniMax::maximizeScore(const GameState& state,
     const std::vector<Move>& moves,
     int depth, int alpha, int beta,
@@ -187,18 +309,15 @@ int MiniMax::maximizeScore(const GameState& state,
     int maxScore = MIN_SCORE;
 
     for (const Move& move : moves) {
-        // Simulate
         GameState testState = state;
         testState.applyMove(move, false);
 
-        // Next turn is player so keep mini them
         int score = alphaBeta(testState, depth - 1, alpha, beta, false, aiPlayer);
 
-        // Track score
         maxScore = std::max(maxScore, score);
         alpha = std::max(alpha, score);
 
-        if (beta <= alpha) { // If found a move the player will blcok then just skip it
+        if (beta <= alpha) {
             m_pruneCount++;
             break;
         }
@@ -207,7 +326,6 @@ int MiniMax::maximizeScore(const GameState& state,
     return maxScore;
 }
 
-// Opponent's turn: minimize score
 int MiniMax::minimizeScore(const GameState& state,
     const std::vector<Move>& moves,
     int depth, int alpha, int beta,
@@ -223,7 +341,7 @@ int MiniMax::minimizeScore(const GameState& state,
         minScore = std::min(minScore, score);
         beta = std::min(beta, score);
 
-        if (beta <= alpha) { // Ai wont allow this, just skip
+        if (beta <= alpha) {
             m_pruneCount++;
             break;
         }
