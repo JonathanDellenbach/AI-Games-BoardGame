@@ -1,0 +1,22 @@
+\doxysection{Frog.\+h}
+\hypertarget{_frog_8h_source}{}\label{_frog_8h_source}\index{include/Frog.h@{include/Frog.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#include\ "{}Piece.h"{}}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{keyword}{class\ }Frog\ :\ \textcolor{keyword}{public}\ Piece\ \{}
+\DoxyCodeLine{00005\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00006\ \ \ \ \ Frog(PieceOwner\ owner,\ \textcolor{keyword}{const}\ std::string\&\ texturePath);}
+\DoxyCodeLine{00007\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~Frog();}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ isValidMove(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ fromCol,\ \textcolor{keywordtype}{int}\ fromRow,}
+\DoxyCodeLine{00010\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ toCol,\ \textcolor{keywordtype}{int}\ toRow)\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{bool}\ canJumpTo(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ fromCol,\ \textcolor{keywordtype}{int}\ fromRow,}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ toCol,\ \textcolor{keywordtype}{int}\ toRow)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00015\ \};}
+\DoxyCodeLine{00016\ }
+
+\end{DoxyCode}

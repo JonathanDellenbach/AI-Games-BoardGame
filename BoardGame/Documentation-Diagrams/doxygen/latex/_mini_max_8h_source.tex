@@ -1,0 +1,57 @@
+\doxysection{Mini\+Max.\+h}
+\hypertarget{_mini_max_8h_source}{}\label{_mini_max_8h_source}\index{include/MiniMax.h@{include/MiniMax.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}GameState.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{keyword}{class\ }MiniMax}
+\DoxyCodeLine{00008\ \{}
+\DoxyCodeLine{00009\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00010\ \ \ \ \ MiniMax();}
+\DoxyCodeLine{00011\ \ \ \ \ MiniMax(PieceOwner\ player);}
+\DoxyCodeLine{00012\ \ \ \ \ \string~MiniMax();}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \mbox{\hyperlink{struct_move}{Move}}\ findBestMove(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ depth);}
+\DoxyCodeLine{00015\ \ \ \ \ std::pair<int,\ int>\ findBestPlacement(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \mbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{comment}{//\ Evaluation}}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluatePosition(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row,\ \mbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00020\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluateBlockingPotential(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row,\ PieceOwner\ opponent)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluateOffensivePotential(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row,\ \mbox{\hyperlink{class_piece}{Piece}}*\ piece)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{comment}{//\ Minimax\ algorithm}}
+\DoxyCodeLine{00024\ \ \ \ \ \textcolor{keywordtype}{int}\ alphaBeta(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isMaximizingPlayer,\ PieceOwner\ aiPlayer);}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keywordtype}{int}\ maximizeScore(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keyword}{const}\ std::vector<Move>\&\ moves,}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ PieceOwner\ aiPlayer);}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{int}\ minimizeScore(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keyword}{const}\ std::vector<Move>\&\ moves,}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ depth,\ \textcolor{keywordtype}{int}\ alpha,\ \textcolor{keywordtype}{int}\ beta,\ PieceOwner\ aiPlayer);}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{comment}{//\ Utilities}}
+\DoxyCodeLine{00034\ \ \ \ \ PieceOwner\ getOpponent(PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{bool}\ isValidPosition(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ resetStatistics();}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{//\ Members}}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_depth;}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_nodesEvaluated;}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_pruneCount;}
+\DoxyCodeLine{00042\ \ \ \ \ PieceOwner\ m\_player;\ \textcolor{comment}{//which\ player\ the\ player\ AI\ represents}}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{comment}{//\ Constants}}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ MIN\_SCORE\ =\ std::numeric\_limits<int>::min();}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ MAX\_SCORE\ =\ std::numeric\_limits<int>::max();}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ WIN\_SCORE\ =\ 10000;}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ LOSS\_SCORE\ =\ -\/10000;}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keyword}{constexpr}\ \textcolor{keywordtype}{int}\ NON\_TERMINAL\ =\ 0;}
+\DoxyCodeLine{00050\ \};}
+\DoxyCodeLine{00051\ }
+
+\end{DoxyCode}

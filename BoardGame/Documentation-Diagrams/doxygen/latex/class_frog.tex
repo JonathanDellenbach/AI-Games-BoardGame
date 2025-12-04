@@ -1,0 +1,89 @@
+\doxysection{Frog Class Reference}
+\hypertarget{class_frog}{}\label{class_frog}\index{Frog@{Frog}}
+Inheritance diagram for Frog\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_frog}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_frog_a773ef315d5df4bc17fe05a903349f6c2}\label{class_frog_a773ef315d5df4bc17fe05a903349f6c2} 
+{\bfseries Frog} (Piece\+Owner owner, const std\+::string \&texture\+Path)
+\item 
+virtual bool \mbox{\hyperlink{class_frog_a359473ce265a462ab7208c452fecd88f}{is\+Valid\+Move}} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int from\+Col, int from\+Row, int to\+Col, int to\+Row) const override
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions inherited from \mbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+{\bfseries Piece} (Piece\+Type type, Piece\+Owner owner, const std\+::string \&texture\+Path)
+\item 
+void {\bfseries render} (sf\+::\+Render\+Window \&window)
+\item 
+void {\bfseries set\+Position} (float x, float y)
+\item 
+void {\bfseries set\+Grid\+Position} (int col, int row)
+\item 
+int {\bfseries get\+Grid\+Col} () const
+\item 
+int {\bfseries get\+Grid\+Row} () const
+\item 
+Piece\+Type {\bfseries get\+Type} () const
+\item 
+Piece\+Owner {\bfseries get\+Owner} () const
+\item 
+sf\+::\+Vector2f {\bfseries get\+Position} () const
+\item 
+bool {\bfseries is\+Valid} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_frog_ad6ad96e65f4d66fad6551b442fa0f169}\label{class_frog_ad6ad96e65f4d66fad6551b442fa0f169} 
+bool {\bfseries can\+Jump\+To} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int from\+Col, int from\+Row, int to\+Col, int to\+Row) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Additional Inherited Members}
+\doxysubsection*{Protected Member Functions inherited from \mbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+void {\bfseries setup\+Sprite} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes inherited from \mbox{\hyperlink{class_piece}{Piece}}}
+\begin{DoxyCompactItemize}
+\item 
+Piece\+Type {\bfseries m\+\_\+type}
+\item 
+Piece\+Owner {\bfseries m\+\_\+owner}
+\item 
+sf\+::\+Texture {\bfseries m\+\_\+texture}
+\item 
+sf\+::\+Sprite {\bfseries m\+\_\+sprite}
+\item 
+bool {\bfseries m\+\_\+is\+Valid}
+\item 
+int {\bfseries m\+\_\+grid\+Col}
+\item 
+int {\bfseries m\+\_\+grid\+Row}
+\end{DoxyCompactItemize}
+
+
+\label{doc-func-members}
+\Hypertarget{class_frog_doc-func-members}
+\doxysubsection{Member Function Documentation}
+\Hypertarget{class_frog_a359473ce265a462ab7208c452fecd88f}\index{Frog@{Frog}!isValidMove@{isValidMove}}
+\index{isValidMove@{isValidMove}!Frog@{Frog}}
+\doxysubsubsection{\texorpdfstring{isValidMove()}{isValidMove()}}
+{\footnotesize\ttfamily \label{class_frog_a359473ce265a462ab7208c452fecd88f} 
+bool Frog\+::is\+Valid\+Move (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{class_game_state}{Game\+State}} \&}]{state}{, }\item[{int}]{from\+Col}{, }\item[{int}]{from\+Row}{, }\item[{int}]{to\+Col}{, }\item[{int}]{to\+Row}{}\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [override]}, {\ttfamily [virtual]}}
+
+
+
+Implements \mbox{\hyperlink{class_piece}{Piece}}.
+
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Frog.\+h\item 
+src/Frog.\+cpp\end{DoxyCompactItemize}

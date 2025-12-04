@@ -1,0 +1,158 @@
+\doxysection{Game Class Reference}
+\hypertarget{class_game}{}\label{class_game}\index{Game@{Game}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_game_a1ab78f5ed0d5ea879157357cf2fb2afa}\label{class_game_a1ab78f5ed0d5ea879157357cf2fb2afa} 
+void {\bfseries run} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_game_a7d0a68f1e3d5b2ef44c3e1d8c6813a5b}\label{class_game_a7d0a68f1e3d5b2ef44c3e1d8c6813a5b} 
+void {\bfseries initialize\+Pieces} ()
+\item 
+\Hypertarget{class_game_a12b2ebb9c52176ced5920f2098f76ca5}\label{class_game_a12b2ebb9c52176ced5920f2098f76ca5} 
+bool {\bfseries validate\+Game} ()
+\item 
+\Hypertarget{class_game_a79f698dda206dd7a9bed28b3f88bdc38}\label{class_game_a79f698dda206dd7a9bed28b3f88bdc38} 
+void {\bfseries process\+Events} ()
+\item 
+\Hypertarget{class_game_a88c8c1e5ea297bb218d81b6a2a61c580}\label{class_game_a88c8c1e5ea297bb218d81b6a2a61c580} 
+void {\bfseries process\+Keys} (const std\+::optional$<$ sf\+::\+Event $>$ t\+\_\+event)
+\item 
+\Hypertarget{class_game_a55249c1379fd2c654bcb754273d5e9c5}\label{class_game_a55249c1379fd2c654bcb754273d5e9c5} 
+void {\bfseries check\+Keyboard\+State} ()
+\item 
+\Hypertarget{class_game_a1d2aee62bac8e228344e1f44fab504e0}\label{class_game_a1d2aee62bac8e228344e1f44fab504e0} 
+void {\bfseries update} (sf\+::\+Time t\+\_\+delta\+Time)
+\item 
+\Hypertarget{class_game_a15ddd769261d923827a3cdf41499c843}\label{class_game_a15ddd769261d923827a3cdf41499c843} 
+void {\bfseries render} ()
+\item 
+\Hypertarget{class_game_ad6b50e63ca681c1087167ca986f2e6ed}\label{class_game_ad6b50e63ca681c1087167ca986f2e6ed} 
+void {\bfseries render\+Game\+Over} ()
+\item 
+\Hypertarget{class_game_a7e9d3e07113904a3114446f1b2a3b679}\label{class_game_a7e9d3e07113904a3114446f1b2a3b679} 
+void {\bfseries handle\+Mouse\+Click} (int mouseX, int mouseY)
+\item 
+\Hypertarget{class_game_abe749889682307088a2686b676691bbd}\label{class_game_abe749889682307088a2686b676691bbd} 
+void {\bfseries handle\+Placement\+Phase} (int mouseX, int mouseY)
+\item 
+\Hypertarget{class_game_aa7e18da8e20a56ee9c51b3677cb23072}\label{class_game_aa7e18da8e20a56ee9c51b3677cb23072} 
+void {\bfseries handle\+Movement\+Phase} (int mouseX, int mouseY)
+\item 
+\Hypertarget{class_game_a143b209e305e64f7ad70cce8eaa9844a}\label{class_game_a143b209e305e64f7ad70cce8eaa9844a} 
+void {\bfseries select\+Piece\+From\+Selection\+Grid} (\mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}} pos)
+\item 
+\Hypertarget{class_game_a9054b7687a7f4fe8bf738331d006e0ea}\label{class_game_a9054b7687a7f4fe8bf738331d006e0ea} 
+void {\bfseries select\+Piece\+From\+Game\+Board} (\mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}} pos)
+\item 
+\Hypertarget{class_game_a6e825d75cef2614377241b8cfd4206f1}\label{class_game_a6e825d75cef2614377241b8cfd4206f1} 
+void {\bfseries place\+Piece\+In\+Placement\+Phase} (\mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}} pos)
+\item 
+\Hypertarget{class_game_a769a4d47766a4ecedc34790240810da1}\label{class_game_a769a4d47766a4ecedc34790240810da1} 
+void {\bfseries move\+Piece} (\mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}} pos)
+\item 
+\Hypertarget{class_game_aa8dc15ac50b2034a17d0555cb6638c11}\label{class_game_aa8dc15ac50b2034a17d0555cb6638c11} 
+void {\bfseries execute\+AIPlacement} ()
+\item 
+\Hypertarget{class_game_a4891dbc9ab0b2c95b4b538c120f13a72}\label{class_game_a4891dbc9ab0b2c95b4b538c120f13a72} 
+void {\bfseries execute\+AIMove} ()
+\item 
+\Hypertarget{class_game_a67017006f9fa92665b8dda4df50901d4}\label{class_game_a67017006f9fa92665b8dda4df50901d4} 
+void {\bfseries execute\+Player\+AIPlacement} ()
+\item 
+\Hypertarget{class_game_afe7930406fc8107280708425aa0aefcf}\label{class_game_afe7930406fc8107280708425aa0aefcf} 
+void {\bfseries execute\+Player\+AIMove} ()
+\item 
+\Hypertarget{class_game_a72b9c87bb21631414f2abba709e957d2}\label{class_game_a72b9c87bb21631414f2abba709e957d2} 
+void {\bfseries highlight\+Valid\+Placements} ()
+\item 
+\Hypertarget{class_game_add58c397e3408f8a2909a43dbf52c807}\label{class_game_add58c397e3408f8a2909a43dbf52c807} 
+void {\bfseries highlight\+Valid\+Moves} ()
+\item 
+\Hypertarget{class_game_acc53c5be2f750833bd6e215c839fa3fe}\label{class_game_acc53c5be2f750833bd6e215c839fa3fe} 
+void {\bfseries clear\+All\+Highlights} ()
+\item 
+\Hypertarget{class_game_a7f043cd607b895dedd713a74bb54d87e}\label{class_game_a7f043cd607b895dedd713a74bb54d87e} 
+void {\bfseries switch\+Turn} ()
+\item 
+\Hypertarget{class_game_a83ba6f6f18ff9303e86640ee4bf15059}\label{class_game_a83ba6f6f18ff9303e86640ee4bf15059} 
+void {\bfseries render\+Mode\+Selection} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_game_ab28ed2c042ec89b177a4866c9fe3bc04}\label{class_game_ab28ed2c042ec89b177a4866c9fe3bc04} 
+\mbox{\hyperlink{class_board}{Board}} {\bfseries m\+\_\+board}
+\item 
+\Hypertarget{class_game_adca5bafa6de46a97d01e4fa0dcdc28f9}\label{class_game_adca5bafa6de46a97d01e4fa0dcdc28f9} 
+\mbox{\hyperlink{class_game_state}{Game\+State}} {\bfseries m\+\_\+game\+State}
+\item 
+\Hypertarget{class_game_a3d785ef090d272dd2c52832c9c2c57a3}\label{class_game_a3d785ef090d272dd2c52832c9c2c57a3} 
+\mbox{\hyperlink{class_mini_max}{Mini\+Max}} {\bfseries m\+\_\+ai} \{ Piece\+Owner\+::\+AI \}
+\item 
+\Hypertarget{class_game_ada058c909026328dff37f6f109f407b1}\label{class_game_ada058c909026328dff37f6f109f407b1} 
+\mbox{\hyperlink{class_mini_max}{Mini\+Max}} {\bfseries m\+\_\+player\+AI} \{ Piece\+Owner\+::\+PLAYER \}
+\item 
+\Hypertarget{class_game_a223de215aeb661cd423ac145756cc730}\label{class_game_a223de215aeb661cd423ac145756cc730} 
+sf\+::\+Render\+Window {\bfseries window}
+\item 
+\Hypertarget{class_game_af729561d89036f0c841bc1a428dc43cf}\label{class_game_af729561d89036f0c841bc1a428dc43cf} 
+sf\+::\+Font {\bfseries font}
+\item 
+\Hypertarget{class_game_a69eb16363bf1cf7a22f74f175ac28f79}\label{class_game_a69eb16363bf1cf7a22f74f175ac28f79} 
+bool {\bfseries exit\+Game} = false
+\item 
+\Hypertarget{class_game_a95b8729e13af31add8738ac2d6534713}\label{class_game_a95b8729e13af31add8738ac2d6534713} 
+bool {\bfseries m\+\_\+game\+Valid} = false
+\item 
+\Hypertarget{class_game_a25333f426274213406e294b8d5c724cc}\label{class_game_a25333f426274213406e294b8d5c724cc} 
+Game\+Mode {\bfseries m\+\_\+game\+Mode}
+\item 
+\Hypertarget{class_game_afd3412797bf3425d8d6ce2360eaf4bd3}\label{class_game_afd3412797bf3425d8d6ce2360eaf4bd3} 
+bool {\bfseries m\+\_\+mode\+Selected} = false
+\item 
+\Hypertarget{class_game_a0af66f5cd32dce204d50c7c87e7b6d5f}\label{class_game_a0af66f5cd32dce204d50c7c87e7b6d5f} 
+sf\+::\+Clock {\bfseries m\+\_\+ai\+Move\+Timer}
+\item 
+\Hypertarget{class_game_a878a1a06e8c9365193ffacbb79db9f80}\label{class_game_a878a1a06e8c9365193ffacbb79db9f80} 
+float {\bfseries m\+\_\+ai\+Move\+Delay}
+\item 
+\Hypertarget{class_game_afa5cf25d20ff053f87af52726a7ee7a4}\label{class_game_afa5cf25d20ff053f87af52726a7ee7a4} 
+bool {\bfseries m\+\_\+waiting\+For\+Next\+Move}
+\item 
+\Hypertarget{class_game_aa21e3dbfa7a4d2e9f5f0cc3b84f2b1e0}\label{class_game_aa21e3dbfa7a4d2e9f5f0cc3b84f2b1e0} 
+std\+::vector$<$ std\+::unique\+\_\+ptr$<$ \mbox{\hyperlink{class_piece}{Piece}} $>$ $>$ {\bfseries m\+\_\+all\+Pieces}
+\item 
+\Hypertarget{class_game_a3aada1bf02f0201d7152ca7c870621e7}\label{class_game_a3aada1bf02f0201d7152ca7c870621e7} 
+std\+::vector$<$ \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries m\+\_\+player\+Pieces}
+\item 
+\Hypertarget{class_game_a30d9d164dbe73a8b649b050813380ed2}\label{class_game_a30d9d164dbe73a8b649b050813380ed2} 
+std\+::vector$<$ \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} $>$ {\bfseries m\+\_\+ai\+Pieces}
+\item 
+\Hypertarget{class_game_af3f17c914b93dd49d1fdfcffc80112ac}\label{class_game_af3f17c914b93dd49d1fdfcffc80112ac} 
+\mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} {\bfseries m\+\_\+selected\+Piece}
+\item 
+\Hypertarget{class_game_afdc05a857496eab8486db3a8f16d9eb0}\label{class_game_afdc05a857496eab8486db3a8f16d9eb0} 
+int {\bfseries m\+\_\+selected\+Piece\+Index}
+\item 
+\Hypertarget{class_game_a5ebb170dbd0a3716ff92bf41374c5568}\label{class_game_a5ebb170dbd0a3716ff92bf41374c5568} 
+bool {\bfseries m\+\_\+piece\+Selected}
+\item 
+\Hypertarget{class_game_acf465e46a9ef67168527ad4891814504}\label{class_game_acf465e46a9ef67168527ad4891814504} 
+Piece\+Owner {\bfseries m\+\_\+current\+Turn} \{ Piece\+Owner\+::\+PLAYER \}
+\item 
+\Hypertarget{class_game_a3bc526ef1bce2694452886e255a73289}\label{class_game_a3bc526ef1bce2694452886e255a73289} 
+int {\bfseries m\+\_\+player\+Pieces\+Placed}
+\item 
+\Hypertarget{class_game_a3dbd4182c87d6c05ed496a0faa08588a}\label{class_game_a3dbd4182c87d6c05ed496a0faa08588a} 
+int {\bfseries m\+\_\+ai\+Pieces\+Placed}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Game.\+h\item 
+src/Game.\+cpp\end{DoxyCompactItemize}

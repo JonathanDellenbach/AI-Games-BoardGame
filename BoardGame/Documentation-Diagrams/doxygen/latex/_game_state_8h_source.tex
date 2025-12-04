@@ -1,0 +1,95 @@
+\doxysection{Game\+State.\+h}
+\hypertarget{_game_state_8h_source}{}\label{_game_state_8h_source}\index{include/GameState.h@{include/GameState.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#pragma\ once}}
+\DoxyCodeLine{00002\ }
+\DoxyCodeLine{00003\ \textcolor{preprocessor}{\#include\ "{}Piece.h"{}}}
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <limits>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <random>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ Represents\ a\ move\ in\ the\ game}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }Move\ \{}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keywordtype}{int}\ fromCol;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{int}\ fromRow;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{int}\ toCol;}
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keywordtype}{int}\ toRow;}
+\DoxyCodeLine{00016\ \ \ \ \ \mbox{\hyperlink{class_piece}{Piece}}*\ piece;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ Move()\ :\ fromCol(-\/1),\ fromRow(-\/1),\ toCol(-\/1),\ toRow(-\/1),\ piece(\textcolor{keyword}{nullptr})\ \{\}}
+\DoxyCodeLine{00019\ \ \ \ \ Move(\textcolor{keywordtype}{int}\ fc,\ \textcolor{keywordtype}{int}\ fr,\ \textcolor{keywordtype}{int}\ tc,\ \textcolor{keywordtype}{int}\ tr,\ \mbox{\hyperlink{class_piece}{Piece}}*\ p)}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ :\ fromCol(fc),\ fromRow(fr),\ toCol(tc),\ toRow(tr),\ piece(p)\ \{}
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ \};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{comment}{//\ Game\ phases}}
+\DoxyCodeLine{00025\ \textcolor{keyword}{enum\ class}\ GamePhase\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ PLACEMENT,}
+\DoxyCodeLine{00027\ \ \ \ \ MOVEMENT,}
+\DoxyCodeLine{00028\ \ \ \ \ GAME\_OVER}
+\DoxyCodeLine{00029\ \};}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \textcolor{keyword}{class\ }GameState\ \{}
+\DoxyCodeLine{00032\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ GameState();}
+\DoxyCodeLine{00034\ \ \ \ \ \string~GameState();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ Board\ management}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{bool}\ isPositionEmpty(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00038\ \ \ \ \ \mbox{\hyperlink{class_piece}{Piece}}*\ getPieceAt(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00039\ \ \ \ \ \textcolor{keywordtype}{void}\ setPieceAt(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row,\ \mbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ removePieceAt(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{comment}{//\ Move\ validation\ and\ generation}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{bool}\ isValidPlacement(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{bool}\ isValidMove(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_move}{Move}}\&\ move)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ std::vector<Move>\ getLegalMoves(PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00047\ \ \ \ \ std::vector<std::pair<int,\ int>>\ getLegalPlacements()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{comment}{//\ Move\ execution}}
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{keywordtype}{void}\ applyMove(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_move}{Move}}\&\ move,\ \textcolor{keywordtype}{bool}\ updatePiecePosition\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{void}\ applyPlacement(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row,\ \mbox{\hyperlink{class_piece}{Piece}}*\ piece);}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{//\ Win\ condition\ checking}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{bool}\ isWinningState(PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ \ \ \ \ PieceOwner\ getWinner()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ Evaluation\ for\ AI}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluate(PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//\ Game\ phase\ management}}
+\DoxyCodeLine{00061\ \ \ \ \ GamePhase\ getCurrentPhase()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_currentPhase;\ \}}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ setPhase(GamePhase\ phase)\ \{\ m\_currentPhase\ =\ phase;\ \}}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ Position\ history\ for\ repetition\ detection}}
+\DoxyCodeLine{00065\ \ \ \ \ uint64\_t\ getBoardHash()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00066\ \ \ \ \ \textcolor{keywordtype}{void}\ recordPosition();}
+\DoxyCodeLine{00067\ \ \ \ \ \textcolor{keywordtype}{void}\ updateZobrist(\mbox{\hyperlink{class_piece}{Piece}}*\ piece,\ \textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row,\ \textcolor{keywordtype}{bool}\ add);}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keywordtype}{int}\ getPositionRepetitionCount(uint64\_t\ key)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keywordtype}{void}\ clearPositionHistory();}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00072\ \ \ \ \ \textcolor{comment}{//\ Add\ non\ owning\ pointer\ to\ board\ and\ the\ locals}}
+\DoxyCodeLine{00073\ \ \ \ \ \mbox{\hyperlink{class_piece}{Piece}}*\ m\_board[5][5];}
+\DoxyCodeLine{00074\ \ \ \ \ GamePhase\ m\_currentPhase;}
+\DoxyCodeLine{00075\ \ \ \ \ PieceOwner\ m\_currentPlayer;}
+\DoxyCodeLine{00076\ \ \ \ \ PieceOwner\ m\_winner;}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{comment}{//\ Position\ history\ tracking}}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{void}\ initializeZobrist();}
+\DoxyCodeLine{00080\ \ \ \ \ std::unordered\_map<uint64\_t,\ int>\ m\_positionHistory;}
+\DoxyCodeLine{00081\ \ \ \ \ uint64\_t\ m\_zobristKey;}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{//\ To\ check\ a\ line\ directly}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keywordtype}{bool}\ checkLine(\textcolor{keywordtype}{int}\ startCol,\ \textcolor{keywordtype}{int}\ startRow,\ \textcolor{keywordtype}{int}\ dCol,\ \textcolor{keywordtype}{int}\ dRow,\ PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00085\ \ \ \ \ \textcolor{comment}{//\ Helper\ functions\ for\ evaluation}}
+\DoxyCodeLine{00086\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluateLines(PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluateLine(\textcolor{keywordtype}{int}\ startCol,\ \textcolor{keywordtype}{int}\ startRow,\ \textcolor{keywordtype}{int}\ deltaCol,\ \textcolor{keywordtype}{int}\ deltaRow,\ PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keywordtype}{int}\ evaluateCenterControl(PieceOwner\ player)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00089\ \};}
+
+\end{DoxyCode}

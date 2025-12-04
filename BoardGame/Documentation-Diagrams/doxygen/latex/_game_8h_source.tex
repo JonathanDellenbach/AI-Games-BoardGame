@@ -1,0 +1,104 @@
+\doxysection{Game.\+h}
+\hypertarget{_game_8h_source}{}\label{_game_8h_source}\index{include/Game.h@{include/Game.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ GAME\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ GAME\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <SFML/Graphics.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <SFML/Audio.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ "{}Board.h"{}}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ "{}GameState.h"{}}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ "{}MiniMax.h"{}}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ "{}Donkey.h"{}}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ "{}Snake.h"{}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ "{}Frog.h"{}}}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \textcolor{keyword}{enum\ class}\ GameMode\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ PLAYER\_VS\_AI,}
+\DoxyCodeLine{00017\ \ \ \ \ AI\_VS\_AI}
+\DoxyCodeLine{00018\ \};}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \textcolor{keyword}{class\ }Game}
+\DoxyCodeLine{00021\ \{}
+\DoxyCodeLine{00022\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ Game();}
+\DoxyCodeLine{00024\ \ \ \ \ \string~Game();}
+\DoxyCodeLine{00025\ \ \ \ \ \textcolor{keywordtype}{void}\ run();}
+\DoxyCodeLine{00026\ }
+\DoxyCodeLine{00027\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{//\ Init\ game}}
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keywordtype}{void}\ initializePieces();\ \textcolor{comment}{//create\ game\ pieces}}
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keywordtype}{bool}\ validateGame();}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \textcolor{comment}{//\ Game\ loop}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keywordtype}{void}\ processEvents();}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keywordtype}{void}\ processKeys(\textcolor{keyword}{const}\ std::optional<sf::Event>\ t\_event);}
+\DoxyCodeLine{00035\ \ \ \ \ \textcolor{keywordtype}{void}\ checkKeyboardState();}
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{keywordtype}{void}\ update(sf::Time\ t\_deltaTime);}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keywordtype}{void}\ render();}
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keywordtype}{void}\ renderGameOver();}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{comment}{//\ Input}}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ handleMouseClick(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);}
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ handlePlacementPhase(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keywordtype}{void}\ handleMovementPhase(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{comment}{//\ Piece\ selection\ and\ movement}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{void}\ selectPieceFromSelectionGrid(\mbox{\hyperlink{struct_grid_pos}{GridPos}}\ pos);}
+\DoxyCodeLine{00047\ \ \ \ \ \textcolor{keywordtype}{void}\ selectPieceFromGameBoard(\mbox{\hyperlink{struct_grid_pos}{GridPos}}\ pos);}
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{keywordtype}{void}\ placePieceInPlacementPhase(\mbox{\hyperlink{struct_grid_pos}{GridPos}}\ pos);}
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keywordtype}{void}\ movePiece(\mbox{\hyperlink{struct_grid_pos}{GridPos}}\ pos);}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{comment}{//\ AI\ execution}}
+\DoxyCodeLine{00052\ \ \ \ \ \textcolor{keywordtype}{void}\ executeAIPlacement();}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{void}\ executeAIMove();}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{void}\ executePlayerAIPlacement();}
+\DoxyCodeLine{00055\ \ \ \ \ \textcolor{keywordtype}{void}\ executePlayerAIMove();}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \ \ \ \ \textcolor{comment}{//\ Ui\ Helpters}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{void}\ highlightValidPlacements();}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keywordtype}{void}\ highlightValidMoves();}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keywordtype}{void}\ clearAllHighlights();}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{void}\ switchTurn();}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{void}\ renderModeSelection();}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{comment}{//\ Game\ Comps}}
+\DoxyCodeLine{00065\ \ \ \ \ \mbox{\hyperlink{class_board}{Board}}\ m\_board;}
+\DoxyCodeLine{00066\ \ \ \ \ \mbox{\hyperlink{class_game_state}{GameState}}\ m\_gameState;}
+\DoxyCodeLine{00067\ \ \ \ \ \mbox{\hyperlink{class_mini_max}{MiniMax}}\ m\_ai\{\ PieceOwner::AI\ \};\ \textcolor{comment}{//\ ai}}
+\DoxyCodeLine{00068\ \ \ \ \ \mbox{\hyperlink{class_mini_max}{MiniMax}}\ m\_playerAI\{\ PieceOwner::PLAYER\ \};\ \textcolor{comment}{//ai\ as\ player}}
+\DoxyCodeLine{00069\ }
+\DoxyCodeLine{00070\ \ \ \ \ \textcolor{comment}{//\ General\ SFML\ and\ locals}}
+\DoxyCodeLine{00071\ \ \ \ \ sf::RenderWindow\ window;}
+\DoxyCodeLine{00072\ \ \ \ \ sf::Font\ font;}
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{keywordtype}{bool}\ exitGame\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_gameValid\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \ \ \ \ GameMode\ m\_gameMode;}
+\DoxyCodeLine{00077\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_modeSelected\ =\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00078\ \ \ \ \ sf::Clock\ m\_aiMoveTimer;}
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keywordtype}{float}\ m\_aiMoveDelay;}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_waitingForNextMove;}
+\DoxyCodeLine{00081\ }
+\DoxyCodeLine{00082\ \ \ \ \ \textcolor{comment}{//\ Pieces}}
+\DoxyCodeLine{00083\ \ \ \ \ std::vector<std::unique\_ptr<Piece>>\ m\_allPieces;}
+\DoxyCodeLine{00084\ \ \ \ \ std::vector<Piece*>\ m\_playerPieces;}
+\DoxyCodeLine{00085\ \ \ \ \ std::vector<Piece*>\ m\_aiPieces;}
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \textcolor{comment}{//\ Game\ State}}
+\DoxyCodeLine{00088\ \ \ \ \ \mbox{\hyperlink{class_piece}{Piece}}*\ m\_selectedPiece;}
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_selectedPieceIndex;}
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_pieceSelected;}
+\DoxyCodeLine{00091\ \ \ \ \ PieceOwner\ m\_currentTurn\{\ PieceOwner::PLAYER\ \};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_playerPiecesPlaced;}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_aiPiecesPlaced;}
+\DoxyCodeLine{00095\ \};}
+\DoxyCodeLine{00096\ }
+\DoxyCodeLine{00097\ \textcolor{preprocessor}{\#pragma\ warning(\ pop\ )\ }}
+\DoxyCodeLine{00098\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

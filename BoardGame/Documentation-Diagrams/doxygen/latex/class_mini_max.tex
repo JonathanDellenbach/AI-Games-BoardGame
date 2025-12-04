@@ -1,0 +1,83 @@
+\doxysection{Mini\+Max Class Reference}
+\hypertarget{class_mini_max}{}\label{class_mini_max}\index{MiniMax@{MiniMax}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mini_max_a6aa936da26dbd5011777360666d95826}\label{class_mini_max_a6aa936da26dbd5011777360666d95826} 
+{\bfseries Mini\+Max} (Piece\+Owner player)
+\item 
+\Hypertarget{class_mini_max_a8e288c4f9981766662a2cccaee6cc809}\label{class_mini_max_a8e288c4f9981766662a2cccaee6cc809} 
+\mbox{\hyperlink{struct_move}{Move}} {\bfseries find\+Best\+Move} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int depth)
+\item 
+\Hypertarget{class_mini_max_a9260a903032f54ba69858980a19d2038}\label{class_mini_max_a9260a903032f54ba69858980a19d2038} 
+std\+::pair$<$ int, int $>$ {\bfseries find\+Best\+Placement} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}piece)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mini_max_a7caad01d90948001131772e275817037}\label{class_mini_max_a7caad01d90948001131772e275817037} 
+int {\bfseries evaluate\+Position} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int col, int row, \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}piece)
+\item 
+\Hypertarget{class_mini_max_a112e3977f47a12887eefe050e4de2fd6}\label{class_mini_max_a112e3977f47a12887eefe050e4de2fd6} 
+int {\bfseries evaluate\+Blocking\+Potential} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int col, int row, Piece\+Owner opponent) const
+\item 
+\Hypertarget{class_mini_max_a9a857143b65d56eae401c74ee3f1490c}\label{class_mini_max_a9a857143b65d56eae401c74ee3f1490c} 
+int {\bfseries evaluate\+Offensive\+Potential} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int col, int row, \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}piece) const
+\item 
+\Hypertarget{class_mini_max_ad697206ef94e7575d59265c7e0f81942}\label{class_mini_max_ad697206ef94e7575d59265c7e0f81942} 
+int {\bfseries alpha\+Beta} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int depth, int alpha, int beta, bool is\+Maximizing\+Player, Piece\+Owner ai\+Player)
+\item 
+\Hypertarget{class_mini_max_a1514c1c9251c18873dcec49de072cb08}\label{class_mini_max_a1514c1c9251c18873dcec49de072cb08} 
+int {\bfseries maximize\+Score} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, const std\+::vector$<$ \mbox{\hyperlink{struct_move}{Move}} $>$ \&moves, int depth, int alpha, int beta, Piece\+Owner ai\+Player)
+\item 
+\Hypertarget{class_mini_max_a3533ca75e1624d899b66bd98509dedb8}\label{class_mini_max_a3533ca75e1624d899b66bd98509dedb8} 
+int {\bfseries minimize\+Score} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, const std\+::vector$<$ \mbox{\hyperlink{struct_move}{Move}} $>$ \&moves, int depth, int alpha, int beta, Piece\+Owner ai\+Player)
+\item 
+\Hypertarget{class_mini_max_a77bba8ab68082746b73f9000cf2db094}\label{class_mini_max_a77bba8ab68082746b73f9000cf2db094} 
+Piece\+Owner {\bfseries get\+Opponent} (Piece\+Owner player) const
+\item 
+\Hypertarget{class_mini_max_a9c739dc0bef15313218b4c94b1c1e459}\label{class_mini_max_a9c739dc0bef15313218b4c94b1c1e459} 
+bool {\bfseries is\+Valid\+Position} (int col, int row) const
+\item 
+\Hypertarget{class_mini_max_a0bf13e5e40091a2f9462846cbe7ed66b}\label{class_mini_max_a0bf13e5e40091a2f9462846cbe7ed66b} 
+void {\bfseries reset\+Statistics} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mini_max_a32eed956f9fc170b2b92fcea371d73df}\label{class_mini_max_a32eed956f9fc170b2b92fcea371d73df} 
+int {\bfseries m\+\_\+depth}
+\item 
+\Hypertarget{class_mini_max_a417170403e7150b469417db8bfd0baf3}\label{class_mini_max_a417170403e7150b469417db8bfd0baf3} 
+int {\bfseries m\+\_\+nodes\+Evaluated}
+\item 
+\Hypertarget{class_mini_max_a02171751bdba13da974ad829520f3ff0}\label{class_mini_max_a02171751bdba13da974ad829520f3ff0} 
+int {\bfseries m\+\_\+prune\+Count}
+\item 
+\Hypertarget{class_mini_max_a2cc116981c234ef20f12abb5b52c6e0e}\label{class_mini_max_a2cc116981c234ef20f12abb5b52c6e0e} 
+Piece\+Owner {\bfseries m\+\_\+player}
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_mini_max_a5fe854612226d18d9ff741ba476c41ea}\label{class_mini_max_a5fe854612226d18d9ff741ba476c41ea} 
+static constexpr int {\bfseries MIN\+\_\+\+SCORE} = std\+::numeric\+\_\+limits$<$int$>$\+::min()
+\item 
+\Hypertarget{class_mini_max_a5b1c53be636aa4ecfb14a416ecbd99d5}\label{class_mini_max_a5b1c53be636aa4ecfb14a416ecbd99d5} 
+static constexpr int {\bfseries MAX\+\_\+\+SCORE} = std\+::numeric\+\_\+limits$<$int$>$\+::max()
+\item 
+\Hypertarget{class_mini_max_aba24e4bec701c8875fe27c76faa62fe7}\label{class_mini_max_aba24e4bec701c8875fe27c76faa62fe7} 
+static constexpr int {\bfseries WIN\+\_\+\+SCORE} = 10000
+\item 
+\Hypertarget{class_mini_max_a76468ed1eeca5eadf2c10d0567c726fa}\label{class_mini_max_a76468ed1eeca5eadf2c10d0567c726fa} 
+static constexpr int {\bfseries LOSS\+\_\+\+SCORE} = -\/10000
+\item 
+\Hypertarget{class_mini_max_a8fb133ff98fa5ebe3934d869a9039317}\label{class_mini_max_a8fb133ff98fa5ebe3934d869a9039317} 
+static constexpr int {\bfseries NON\+\_\+\+TERMINAL} = 0
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Mini\+Max.\+h\item 
+src/Mini\+Max.\+cpp\end{DoxyCompactItemize}

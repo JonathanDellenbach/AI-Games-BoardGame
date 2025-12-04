@@ -1,0 +1,80 @@
+\doxysection{Piece Class Reference}
+\hypertarget{class_piece}{}\label{class_piece}\index{Piece@{Piece}}
+Inheritance diagram for Piece\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_piece}
+\end{center}
+\end{figure}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_a1342942506a6321b3696c1adaccb3561}\label{class_piece_a1342942506a6321b3696c1adaccb3561} 
+{\bfseries Piece} (Piece\+Type type, Piece\+Owner owner, const std\+::string \&texture\+Path)
+\item 
+\Hypertarget{class_piece_a6e8a5c699b8d3a86f7cd0540d949354e}\label{class_piece_a6e8a5c699b8d3a86f7cd0540d949354e} 
+virtual bool {\bfseries is\+Valid\+Move} (const \mbox{\hyperlink{class_game_state}{Game\+State}} \&state, int from\+Col, int from\+Row, int to\+Col, int to\+Row) const =0
+\item 
+\Hypertarget{class_piece_a56a5e4e7126901574442e987db240ee9}\label{class_piece_a56a5e4e7126901574442e987db240ee9} 
+void {\bfseries render} (sf\+::\+Render\+Window \&window)
+\item 
+\Hypertarget{class_piece_aafd28e26d28e398632ee08bd06b23bfd}\label{class_piece_aafd28e26d28e398632ee08bd06b23bfd} 
+void {\bfseries set\+Position} (float x, float y)
+\item 
+\Hypertarget{class_piece_a10a3347a085fc5eeeac279cb3753dffc}\label{class_piece_a10a3347a085fc5eeeac279cb3753dffc} 
+void {\bfseries set\+Grid\+Position} (int col, int row)
+\item 
+\Hypertarget{class_piece_a881c71c4c1c6d989eb3f0c8adbf275da}\label{class_piece_a881c71c4c1c6d989eb3f0c8adbf275da} 
+int {\bfseries get\+Grid\+Col} () const
+\item 
+\Hypertarget{class_piece_a527f078de68fe17ed4aa99fb75c483c1}\label{class_piece_a527f078de68fe17ed4aa99fb75c483c1} 
+int {\bfseries get\+Grid\+Row} () const
+\item 
+\Hypertarget{class_piece_a4469f5486b661ba035bac706fe7366e4}\label{class_piece_a4469f5486b661ba035bac706fe7366e4} 
+Piece\+Type {\bfseries get\+Type} () const
+\item 
+\Hypertarget{class_piece_a093205d125a808db102e4895381f764e}\label{class_piece_a093205d125a808db102e4895381f764e} 
+Piece\+Owner {\bfseries get\+Owner} () const
+\item 
+\Hypertarget{class_piece_a73b264943e8a40109ef476a4ba34a914}\label{class_piece_a73b264943e8a40109ef476a4ba34a914} 
+sf\+::\+Vector2f {\bfseries get\+Position} () const
+\item 
+\Hypertarget{class_piece_a2c85f6d06a390c7bea86130a97365599}\label{class_piece_a2c85f6d06a390c7bea86130a97365599} 
+bool {\bfseries is\+Valid} () const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_a286703e1cf452ea9a180a48c17f4b889}\label{class_piece_a286703e1cf452ea9a180a48c17f4b889} 
+void {\bfseries setup\+Sprite} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_piece_ace2cbf78ec33d3b11022e37fc5cbfb6d}\label{class_piece_ace2cbf78ec33d3b11022e37fc5cbfb6d} 
+Piece\+Type {\bfseries m\+\_\+type}
+\item 
+\Hypertarget{class_piece_a61e823e704083effd73e2912609f045d}\label{class_piece_a61e823e704083effd73e2912609f045d} 
+Piece\+Owner {\bfseries m\+\_\+owner}
+\item 
+\Hypertarget{class_piece_af7466d419866fa5238e1f41c6275b217}\label{class_piece_af7466d419866fa5238e1f41c6275b217} 
+sf\+::\+Texture {\bfseries m\+\_\+texture}
+\item 
+\Hypertarget{class_piece_aff1bef21cc01b98e05cb36d055580b97}\label{class_piece_aff1bef21cc01b98e05cb36d055580b97} 
+sf\+::\+Sprite {\bfseries m\+\_\+sprite}
+\item 
+\Hypertarget{class_piece_adfd0dad60d3530520bb58d0fbc3efabf}\label{class_piece_adfd0dad60d3530520bb58d0fbc3efabf} 
+bool {\bfseries m\+\_\+is\+Valid}
+\item 
+\Hypertarget{class_piece_a8a61e02d6d63f23e2fafd28b3845819f}\label{class_piece_a8a61e02d6d63f23e2fafd28b3845819f} 
+int {\bfseries m\+\_\+grid\+Col}
+\item 
+\Hypertarget{class_piece_a4412df5bd0c418af60d541546ea81e03}\label{class_piece_a4412df5bd0c418af60d541546ea81e03} 
+int {\bfseries m\+\_\+grid\+Row}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Piece.\+h\item 
+src/Piece.\+cpp\end{DoxyCompactItemize}

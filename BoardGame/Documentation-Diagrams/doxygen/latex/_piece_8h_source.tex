@@ -1,0 +1,73 @@
+\doxysection{Piece.\+h}
+\hypertarget{_piece_8h_source}{}\label{_piece_8h_source}\index{include/Piece.h@{include/Piece.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ PIECE\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ PIECE\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <SFML/Graphics.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{comment}{//mental\ reminder\ Piece.h/.cpp\ handles\ sprites\ which\ cell\ it's\ in\ owner\ and\ movement\ validation}}
+\DoxyCodeLine{00008\ \textcolor{comment}{//Changed\ to\ base\ class\ for\ inheritance,\ the\ other\ pieces\ only\ have\ movement\ changes\ so\ they\ all\ have\ same\ architecture\ besides\ individual\ movement}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{comment}{//\ Just\ let\ compile\ know\ this\ exists\ without\ header\ reliance.\ }}
+\DoxyCodeLine{00011\ \textcolor{comment}{//\ *\ To\ be\ added}}
+\DoxyCodeLine{00012\ \textcolor{keyword}{class\ }\mbox{\hyperlink{class_game_state}{GameState}};}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{enum\ class}\ PieceType}
+\DoxyCodeLine{00015\ \{}
+\DoxyCodeLine{00016\ \ \ \ \ FROG,}
+\DoxyCodeLine{00017\ \ \ \ \ SNAKE,}
+\DoxyCodeLine{00018\ \ \ \ \ DONKEY,}
+\DoxyCodeLine{00019\ \ \ \ \ NONE}
+\DoxyCodeLine{00020\ \};}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \textcolor{comment}{//which\ player\ owns\ the\ piece}}
+\DoxyCodeLine{00023\ \textcolor{keyword}{enum\ class}\ PieceOwner}
+\DoxyCodeLine{00024\ \{}
+\DoxyCodeLine{00025\ \ \ \ \ PLAYER,}
+\DoxyCodeLine{00026\ \ \ \ \ AI,}
+\DoxyCodeLine{00027\ \ \ \ \ NONE}
+\DoxyCodeLine{00028\ \};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{keyword}{class\ }Piece}
+\DoxyCodeLine{00031\ \{}
+\DoxyCodeLine{00032\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ Piece(PieceType\ type,\ PieceOwner\ owner,\ \textcolor{keyword}{const}\ std::string\&\ texturePath);}
+\DoxyCodeLine{00034\ \ \ \ \ \textcolor{keyword}{virtual}\ \string~Piece();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \textcolor{comment}{//\ Pure\ virtual\ function\ for\ movement\ validation,\ since\ all\ pieces\ move\ different}}
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{bool}\ isValidMove(\textcolor{keyword}{const}\ \mbox{\hyperlink{class_game_state}{GameState}}\&\ state,\ \textcolor{keywordtype}{int}\ fromCol,\ \textcolor{keywordtype}{int}\ fromRow,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{int}\ toCol,\ \textcolor{keywordtype}{int}\ toRow)\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \textcolor{keywordtype}{void}\ render(sf::RenderWindow\&\ window);}
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keywordtype}{void}\ setPosition(\textcolor{keywordtype}{float}\ x,\ \textcolor{keywordtype}{float}\ y);}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{comment}{//\ Grid\ position}}
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ setGridPosition(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{int}\ getGridCol()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_gridCol;\ \}}
+\DoxyCodeLine{00046\ \ \ \ \ \textcolor{keywordtype}{int}\ getGridRow()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_gridRow;\ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ PieceType\ getType()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_type;\ \}}
+\DoxyCodeLine{00049\ \ \ \ \ PieceOwner\ getOwner()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_owner;\ \}}
+\DoxyCodeLine{00050\ \ \ \ \ sf::Vector2f\ getPosition()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_sprite.getPosition();\ \}}
+\DoxyCodeLine{00051\ \ \ \ \ \textcolor{keywordtype}{bool}\ isValid()\textcolor{keyword}{\ const\ }\{\ \textcolor{keywordflow}{return}\ m\_isValid;\ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00054\ \ \ \ \ PieceType\ m\_type;}
+\DoxyCodeLine{00055\ \ \ \ \ PieceOwner\ m\_owner;}
+\DoxyCodeLine{00056\ \ \ \ \ sf::Texture\ m\_texture;}
+\DoxyCodeLine{00057\ \ \ \ \ sf::Sprite\ m\_sprite;}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keywordtype}{bool}\ m\_isValid;}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{comment}{//which\ cell\ this\ piece\ is\ currently\ in}}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_gridCol;}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keywordtype}{int}\ m\_gridRow;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keywordtype}{void}\ setupSprite();}
+\DoxyCodeLine{00065\ \};}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

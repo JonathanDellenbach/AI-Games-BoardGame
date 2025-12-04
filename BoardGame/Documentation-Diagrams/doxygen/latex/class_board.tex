@@ -1,0 +1,59 @@
+\doxysection{Board Class Reference}
+\hypertarget{class_board}{}\label{class_board}\index{Board@{Board}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_board_a1c11a5ee649786a72d833311068ba3c6}\label{class_board_a1c11a5ee649786a72d833311068ba3c6} 
+void {\bfseries render} (sf\+::\+Render\+Window \&window)
+\item 
+\Hypertarget{class_board_ab133f9b5b53f0a4aa8df96ba222d9ca6}\label{class_board_ab133f9b5b53f0a4aa8df96ba222d9ca6} 
+void {\bfseries initialize\+Piece\+Selection\+Grid} ()
+\item 
+\Hypertarget{class_board_a87c8ead5a6079b1c57f1072bdf351934}\label{class_board_a87c8ead5a6079b1c57f1072bdf351934} 
+void {\bfseries initialize\+Game\+Board} ()
+\item 
+\Hypertarget{class_board_a8fd5aa6da243cdf6221de3371c82bc8f}\label{class_board_a8fd5aa6da243cdf6221de3371c82bc8f} 
+sf\+::\+Rectangle\+Shape \texorpdfstring{$\ast$}{*} {\bfseries get\+Piece\+Selection\+Cell} (int col, int row)
+\item 
+\Hypertarget{class_board_aaa8d5ab255c0b8aaebbe5e3ec9725e1b}\label{class_board_aaa8d5ab255c0b8aaebbe5e3ec9725e1b} 
+sf\+::\+Rectangle\+Shape \texorpdfstring{$\ast$}{*} {\bfseries get\+Game\+Board\+Cell} (int col, int row)
+\item 
+\Hypertarget{class_board_a5acb9bf5fa9b7b4dd09a01aa0ff5835f}\label{class_board_a5acb9bf5fa9b7b4dd09a01aa0ff5835f} 
+\mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}} {\bfseries screen\+To\+Selection\+Grid} (int mouseX, int mouseY)
+\item 
+\Hypertarget{class_board_aa17b70e711a614262c828b740d2f63e1}\label{class_board_aa17b70e711a614262c828b740d2f63e1} 
+\mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}} {\bfseries screen\+To\+Game\+Board} (int mouseX, int mouseY)
+\item 
+\Hypertarget{class_board_a39bb89f91d0b63196872e0b800c24a20}\label{class_board_a39bb89f91d0b63196872e0b800c24a20} 
+bool {\bfseries is\+In\+Selection\+Grid} (int mouseX, int mouseY)
+\item 
+\Hypertarget{class_board_a8a2815b4c4b00886791beab3f0eda278}\label{class_board_a8a2815b4c4b00886791beab3f0eda278} 
+bool {\bfseries is\+In\+Game\+Board} (int mouseX, int mouseY)
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_board_ad3f6bbdadb39228b2c394cfaf7b7283c}\label{class_board_ad3f6bbdadb39228b2c394cfaf7b7283c} 
+const float {\bfseries CELL\+\_\+\+SIZE} = 100.\+0f
+\item 
+\Hypertarget{class_board_a3a244f3c98b8432fa5364b470bf05b40}\label{class_board_a3a244f3c98b8432fa5364b470bf05b40} 
+const float {\bfseries GRID\+\_\+\+OFFSET\+\_\+X} = 50.\+0f
+\item 
+\Hypertarget{class_board_a593c1a339735cd00061dabaebc711574}\label{class_board_a593c1a339735cd00061dabaebc711574} 
+const float {\bfseries GRID\+\_\+\+OFFSET\+\_\+Y} = 100.\+0f
+\item 
+\Hypertarget{class_board_a72505a5e4b8f421c6940339563e91461}\label{class_board_a72505a5e4b8f421c6940339563e91461} 
+const float {\bfseries BOARD\+\_\+\+OFFSET\+\_\+X} = 400.\+0f
+\item 
+\Hypertarget{class_board_a855e6f39173daf923aa6089d8dc4b2f6}\label{class_board_a855e6f39173daf923aa6089d8dc4b2f6} 
+std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}}, sf\+::\+Rectangle\+Shape $>$ {\bfseries piece\+Selection\+Grid}
+\item 
+\Hypertarget{class_board_a0f8667a1e510f5b1c79ca655c3830cc0}\label{class_board_a0f8667a1e510f5b1c79ca655c3830cc0} 
+std\+::unordered\+\_\+map$<$ \mbox{\hyperlink{struct_grid_pos}{Grid\+Pos}}, sf\+::\+Rectangle\+Shape $>$ {\bfseries game\+Board}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Board.\+h\item 
+src/Board.\+cpp\end{DoxyCompactItemize}

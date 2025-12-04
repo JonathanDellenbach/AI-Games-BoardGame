@@ -1,0 +1,74 @@
+\doxysection{Board.\+h}
+\hypertarget{_board_8h_source}{}\label{_board_8h_source}\index{include/Board.h@{include/Board.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ BOARD\_HPP}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ BOARD\_HPP}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <SFML/Graphics.hpp>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <unordered\_map>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{comment}{//Mental\ reminder\ Board.h/.cpp\ is\ for\ drawing\ board\ game\ cells\ and\ managing\ positions/grid\ logic}}
+\DoxyCodeLine{00009\ \textcolor{comment}{//\ }}
+\DoxyCodeLine{00010\ \textcolor{comment}{//grid\ position\ coord\ like\ \{2,1\}}}
+\DoxyCodeLine{00011\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{struct_grid_pos}{GridPos}}}
+\DoxyCodeLine{00012\ \{}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keywordtype}{int}\ x;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keywordtype}{int}\ y;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{comment}{//\ check\ if\ two\ gridPosisitons\ are\ equal\ in\ case\ hashmap\ has\ same\ num}}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keywordtype}{bool}\ operator==(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_grid_pos}{GridPos}}\&\ other)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00018\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ x\ ==\ other.x\ \&\&\ y\ ==\ other.y;}
+\DoxyCodeLine{00020\ \ \ \ \ \}}
+\DoxyCodeLine{00021\ \};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \textcolor{keyword}{namespace\ }std\ \textcolor{comment}{//covert\ GridPosition\ to\ unique\ num}}
+\DoxyCodeLine{00025\ \{}
+\DoxyCodeLine{00026\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00027\ \ \ \ \ \textcolor{keyword}{struct\ }hash<\mbox{\hyperlink{struct_grid_pos}{GridPos}}>}
+\DoxyCodeLine{00028\ \ \ \ \ \{}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{size\_t}\ operator()(\textcolor{keyword}{const}\ \mbox{\hyperlink{struct_grid_pos}{GridPos}}\&\ pos)\ \textcolor{keyword}{const}\ \textcolor{comment}{//unique\ num}}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ hash<int>()(pos.x)\ \string^\ (hash<int>()(pos.y)\ <<\ 1);}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00033\ \ \ \ \ \};}
+\DoxyCodeLine{00034\ \}}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \textcolor{keyword}{class\ }Board}
+\DoxyCodeLine{00037\ \{}
+\DoxyCodeLine{00038\ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00039\ \ \ \ \ Board();}
+\DoxyCodeLine{00040\ \ \ \ \ \string~Board();}
+\DoxyCodeLine{00041\ }
+\DoxyCodeLine{00042\ \ \ \ \ \textcolor{keywordtype}{void}\ render(sf::RenderWindow\&\ window);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \textcolor{keywordtype}{void}\ initializePieceSelectionGrid();}
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keywordtype}{void}\ initializeGameBoard();}
+\DoxyCodeLine{00046\ }
+\DoxyCodeLine{00047\ \ \ \ \ sf::RectangleShape*\ getPieceSelectionCell(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00048\ \ \ \ \ sf::RectangleShape*\ getGameBoardCell(\textcolor{keywordtype}{int}\ col,\ \textcolor{keywordtype}{int}\ row);}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ \ \ \ \ \textcolor{comment}{//mouse}}
+\DoxyCodeLine{00051\ \ \ \ \ \mbox{\hyperlink{struct_grid_pos}{GridPos}}\ screenToSelectionGrid(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);\ \textcolor{comment}{//convert\ pixel\ coord\ to\ selection\ grid\ pos}}
+\DoxyCodeLine{00052\ \ \ \ \ \mbox{\hyperlink{struct_grid_pos}{GridPos}}\ screenToGameBoard(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);\ \textcolor{comment}{//\ convert\ pixel\ coord\ to\ board\ grid\ pos}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keywordtype}{bool}\ isInSelectionGrid(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);\ \textcolor{comment}{//ensures\ the\ click\ its\ inside\ of\ the\ selection\ grid}}
+\DoxyCodeLine{00054\ \ \ \ \ \textcolor{keywordtype}{bool}\ isInGameBoard(\textcolor{keywordtype}{int}\ mouseX,\ \textcolor{keywordtype}{int}\ mouseY);\ \textcolor{comment}{//ensures\ the\ click\ its\ inside\ of\ the\ boaord\ grid}}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{comment}{//grid\ setup}}
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ CELL\_SIZE\ =\ 100.0f;}
+\DoxyCodeLine{00060\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ GRID\_OFFSET\_X\ =\ 50.0f;}
+\DoxyCodeLine{00061\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ GRID\_OFFSET\_Y\ =\ 100.0f;}
+\DoxyCodeLine{00062\ \ \ \ \ \textcolor{keyword}{const}\ \textcolor{keywordtype}{float}\ BOARD\_OFFSET\_X\ =\ 400.0f;}
+\DoxyCodeLine{00063\ }
+\DoxyCodeLine{00064\ \ \ \ \ std::unordered\_map<GridPos,\ sf::RectangleShape>\ pieceSelectionGrid;}
+\DoxyCodeLine{00065\ \ \ \ \ std::unordered\_map<GridPos,\ sf::RectangleShape>\ gameBoard;}
+\DoxyCodeLine{00066\ \};}
+\DoxyCodeLine{00067\ }
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

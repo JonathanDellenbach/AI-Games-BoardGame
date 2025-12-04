@@ -1,0 +1,110 @@
+\doxysection{Game\+State Class Reference}
+\hypertarget{class_game_state}{}\label{class_game_state}\index{GameState@{GameState}}
+\doxysubsubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_game_state_aa67d0a9712c4414b4bc28336a8928dd4}\label{class_game_state_aa67d0a9712c4414b4bc28336a8928dd4} 
+bool {\bfseries is\+Position\+Empty} (int col, int row) const
+\item 
+\Hypertarget{class_game_state_ad8b425d2a874bf2380fb228de99190d4}\label{class_game_state_ad8b425d2a874bf2380fb228de99190d4} 
+\mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} {\bfseries get\+Piece\+At} (int col, int row) const
+\item 
+\Hypertarget{class_game_state_a62abe82eeefbf02f96fa2e72fbcc843e}\label{class_game_state_a62abe82eeefbf02f96fa2e72fbcc843e} 
+void {\bfseries set\+Piece\+At} (int col, int row, \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}piece)
+\item 
+\Hypertarget{class_game_state_adc8a13d9e1c2b51a273f451ba1053217}\label{class_game_state_adc8a13d9e1c2b51a273f451ba1053217} 
+void {\bfseries remove\+Piece\+At} (int col, int row)
+\item 
+\Hypertarget{class_game_state_ac461b6b3a6b3292a5e762fcb9a0b8366}\label{class_game_state_ac461b6b3a6b3292a5e762fcb9a0b8366} 
+bool {\bfseries is\+Valid\+Placement} (int col, int row) const
+\item 
+\Hypertarget{class_game_state_a046dd0a432111a4777d56138bdf31d0c}\label{class_game_state_a046dd0a432111a4777d56138bdf31d0c} 
+bool {\bfseries is\+Valid\+Move} (const \mbox{\hyperlink{struct_move}{Move}} \&move) const
+\item 
+\Hypertarget{class_game_state_ac652806634446e7dc141e227e2a2de40}\label{class_game_state_ac652806634446e7dc141e227e2a2de40} 
+std\+::vector$<$ \mbox{\hyperlink{struct_move}{Move}} $>$ {\bfseries get\+Legal\+Moves} (Piece\+Owner player) const
+\item 
+\Hypertarget{class_game_state_a85442fc44f429454495b51db4fbaed01}\label{class_game_state_a85442fc44f429454495b51db4fbaed01} 
+std\+::vector$<$ std\+::pair$<$ int, int $>$ $>$ {\bfseries get\+Legal\+Placements} () const
+\item 
+\Hypertarget{class_game_state_aea75d47b3da1615b1631e9c862857220}\label{class_game_state_aea75d47b3da1615b1631e9c862857220} 
+void {\bfseries apply\+Move} (const \mbox{\hyperlink{struct_move}{Move}} \&move, bool update\+Piece\+Position=true)
+\item 
+\Hypertarget{class_game_state_aee2a130b758c8d900de372911083347d}\label{class_game_state_aee2a130b758c8d900de372911083347d} 
+void {\bfseries apply\+Placement} (int col, int row, \mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}piece)
+\item 
+\Hypertarget{class_game_state_aa0be742b7dce7aa9bd5889b7397645c9}\label{class_game_state_aa0be742b7dce7aa9bd5889b7397645c9} 
+bool {\bfseries is\+Winning\+State} (Piece\+Owner player) const
+\item 
+\Hypertarget{class_game_state_a90b030127f4582f7c0b0e0206df8d09f}\label{class_game_state_a90b030127f4582f7c0b0e0206df8d09f} 
+Piece\+Owner {\bfseries get\+Winner} () const
+\item 
+\Hypertarget{class_game_state_a2420dc5c3a9597e02279bf56971da495}\label{class_game_state_a2420dc5c3a9597e02279bf56971da495} 
+int {\bfseries evaluate} (Piece\+Owner player) const
+\item 
+\Hypertarget{class_game_state_afc5dc065db75f9ee8c2a064680a04363}\label{class_game_state_afc5dc065db75f9ee8c2a064680a04363} 
+Game\+Phase {\bfseries get\+Current\+Phase} () const
+\item 
+\Hypertarget{class_game_state_a1c50e42e75bcf77409f14ab662a5d13d}\label{class_game_state_a1c50e42e75bcf77409f14ab662a5d13d} 
+void {\bfseries set\+Phase} (Game\+Phase phase)
+\item 
+\Hypertarget{class_game_state_a16fe10cd6a90d0bd375d33aaf1f11ecd}\label{class_game_state_a16fe10cd6a90d0bd375d33aaf1f11ecd} 
+uint64\+\_\+t {\bfseries get\+Board\+Hash} () const
+\item 
+\Hypertarget{class_game_state_a64b194c50febb826ed3eb506f42fe6b3}\label{class_game_state_a64b194c50febb826ed3eb506f42fe6b3} 
+void {\bfseries record\+Position} ()
+\item 
+\Hypertarget{class_game_state_a6fa61a84bea3c57dc0f2bd377e3529e4}\label{class_game_state_a6fa61a84bea3c57dc0f2bd377e3529e4} 
+void {\bfseries update\+Zobrist} (\mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*}piece, int col, int row, bool add)
+\item 
+\Hypertarget{class_game_state_a9f1ca9598cc5f1c2d71be38216511136}\label{class_game_state_a9f1ca9598cc5f1c2d71be38216511136} 
+int {\bfseries get\+Position\+Repetition\+Count} (uint64\+\_\+t key) const
+\item 
+\Hypertarget{class_game_state_a5456fec38da901bca3051f661bb693a7}\label{class_game_state_a5456fec38da901bca3051f661bb693a7} 
+void {\bfseries clear\+Position\+History} ()
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_game_state_a1b90785a8a4ace85e95b518be7009364}\label{class_game_state_a1b90785a8a4ace85e95b518be7009364} 
+void {\bfseries initialize\+Zobrist} ()
+\item 
+\Hypertarget{class_game_state_ab579e3ea358a3a0c79acf42cbbe144bb}\label{class_game_state_ab579e3ea358a3a0c79acf42cbbe144bb} 
+bool {\bfseries check\+Line} (int start\+Col, int start\+Row, int d\+Col, int d\+Row, Piece\+Owner player) const
+\item 
+\Hypertarget{class_game_state_a1e6d449e7d9a0b9b27e155c7d79adfc8}\label{class_game_state_a1e6d449e7d9a0b9b27e155c7d79adfc8} 
+int {\bfseries evaluate\+Lines} (Piece\+Owner player) const
+\item 
+\Hypertarget{class_game_state_a3873fd49bc54efe7420b73d95e1b2b42}\label{class_game_state_a3873fd49bc54efe7420b73d95e1b2b42} 
+int {\bfseries evaluate\+Line} (int start\+Col, int start\+Row, int delta\+Col, int delta\+Row, Piece\+Owner player) const
+\item 
+\Hypertarget{class_game_state_aa79210e71718230aa7d84ec6d524d013}\label{class_game_state_aa79210e71718230aa7d84ec6d524d013} 
+int {\bfseries evaluate\+Center\+Control} (Piece\+Owner player) const
+\end{DoxyCompactItemize}
+\doxysubsubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\Hypertarget{class_game_state_a7ff6d14e06cb79b0a430e602f6ec986f}\label{class_game_state_a7ff6d14e06cb79b0a430e602f6ec986f} 
+\mbox{\hyperlink{class_piece}{Piece}} \texorpdfstring{$\ast$}{*} {\bfseries m\+\_\+board} \mbox{[}5\mbox{]}\mbox{[}5\mbox{]}
+\item 
+\Hypertarget{class_game_state_a8bcfc5ca565e09da3d322a8f04cd3bf6}\label{class_game_state_a8bcfc5ca565e09da3d322a8f04cd3bf6} 
+Game\+Phase {\bfseries m\+\_\+current\+Phase}
+\item 
+\Hypertarget{class_game_state_abe3a990256db8b7ee767965ef53d16b7}\label{class_game_state_abe3a990256db8b7ee767965ef53d16b7} 
+Piece\+Owner {\bfseries m\+\_\+current\+Player}
+\item 
+\Hypertarget{class_game_state_a82b571ea74c3882be2f875b83f410044}\label{class_game_state_a82b571ea74c3882be2f875b83f410044} 
+Piece\+Owner {\bfseries m\+\_\+winner}
+\item 
+\Hypertarget{class_game_state_ac22024ece8cf6c7b631fe029aa6f7a40}\label{class_game_state_ac22024ece8cf6c7b631fe029aa6f7a40} 
+std\+::unordered\+\_\+map$<$ uint64\+\_\+t, int $>$ {\bfseries m\+\_\+position\+History}
+\item 
+\Hypertarget{class_game_state_a5d563fc1023cd52a485fa2d74be9b481}\label{class_game_state_a5d563fc1023cd52a485fa2d74be9b481} 
+uint64\+\_\+t {\bfseries m\+\_\+zobrist\+Key}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/Game\+State.\+h\item 
+src/Game\+State.\+cpp\end{DoxyCompactItemize}
